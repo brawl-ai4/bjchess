@@ -377,7 +377,7 @@ function newGameState() {
 }
 
 function isSquareAttacked(state, r, c, attacker) {
-  const pd = attacker === 'w' ? 1 : -1;
+const pd = attacker === 'w' ? -1 : 1;
   for (const dc of [-1,1]) {
     const pr = r+pd, pc = c+dc;
     if (pr>=0&&pr<8&&pc>=0&&pc<8&&state.board[pr][pc]===attacker+'P') return true;
