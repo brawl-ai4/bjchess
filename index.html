@@ -4,235 +4,456 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CBJ Chess</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-:root{
-  --navy:#002654;--navy-deep:#001228;--blue:#0055a0;--blue-light:#1a77c9;
-  --red:#ce1126;--silver-light:#ddeaf5;
-  --sq-light:#c9dce9;--sq-dark:#1e4d8c;
-  --sq-sel:rgba(206,17,38,0.6);--sq-last:rgba(255,215,0,0.35);
-  --sq-check:rgba(206,17,38,0.78);
-  --bg:#000d1a;--panel:#001525;--border:#0c3666;
-  --text:#d6e4ef;--muted:#4e7a9a;--sq:68px;
+:root {
+  --navy:#002654; --deep:#000e1f; --blue:#0055a0; --blue2:#1a77c9; --blue3:#2390e5;
+  --red:#ce1126; --red2:#a50d1e;
+  --gold:#f0b429; --gold2:#d4940f;
+  --light:#b8cfe0; --lighter:#ddeaf5; --white:#f0f6fc;
+  --sq-w:#d0e4f0; --sq-b:#1a4a8a;
+  --sq-sel:rgba(240,180,41,0.7); --sq-last:rgba(240,180,41,0.28);
+  --sq-chk:rgba(206,17,38,0.8); --sq-ok:rgba(50,200,100,0.55);
+  --panel:#001a35; --panel2:#00213f; --border:#0d3a6e; --border2:#1a5298;
+  --text:#c8dff0; --muted:#4a7499;
+  --sq:70px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--text);
-  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px 16px 40px;
-  background-image:radial-gradient(ellipse 70% 45% at 50% 0%,rgba(0,85,160,0.2) 0%,transparent 70%);}
-.logo{text-align:center;margin-bottom:8px;position:relative;z-index:300;}
-.logo-icon{font-size:2rem;display:inline-block;animation:rock 5s ease-in-out infinite;
-  filter:drop-shadow(0 0 12px rgba(206,17,38,0.5));vertical-align:middle;margin-right:6px;}
-@keyframes rock{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg) translateY(-6px)}}
-.logo h1{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:.08em;
-  color:var(--silver-light);text-shadow:0 0 24px rgba(206,17,38,.4),2px 2px 0 #000;display:inline;vertical-align:middle;}
-.logo h1 span{color:var(--red);}
-.nav{display:flex;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;position:relative;z-index:300;}
-.nav-tab{padding:9px 30px;background:transparent;color:var(--muted);border:none;
-  font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.15em;cursor:pointer;transition:all .18s;
-  border-right:1px solid var(--border);}
+html,body{height:100%;}
+body {
+  font-family:'Barlow Condensed',sans-serif;
+  background:var(--deep);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 0 60px;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,85,160,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 90% 100%, rgba(206,17,38,0.12) 0%, transparent 50%);
+}
+
+/* ── HEADER BAND ── */
+.header {
+  width:100%;
+  background:linear-gradient(180deg,rgba(0,14,31,0.95) 0%,rgba(0,14,31,0) 100%);
+  padding:16px 24px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  position:relative;z-index:300;
+  border-bottom:1px solid rgba(0,85,160,0.2);
+}
+.logo-row {
+  display:flex;align-items:center;gap:10px;
+}
+.logo-cannon {
+  font-size:2.4rem;
+  animation:rock 5s ease-in-out infinite;
+  filter:drop-shadow(0 0 16px rgba(206,17,38,0.6));
+}
+@keyframes rock{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg) translateY(-6px)}}
+.logo-text {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.6rem;
+  letter-spacing:.12em;
+  color:var(--white);
+  text-shadow:0 0 30px rgba(206,17,38,0.5), 0 2px 0 #000;
+}
+.logo-text em {color:var(--red);}
+
+/* ── NAV ── */
+.nav {
+  display:flex;
+  background:rgba(0,26,53,0.7);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  backdrop-filter:blur(8px);
+  position:relative;z-index:300;
+}
+.nav-tab {
+  padding:9px 36px;
+  background:transparent;color:var(--muted);border:none;
+  font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.18em;
+  cursor:pointer;transition:all .2s;
+  border-right:1px solid var(--border);
+  position:relative;
+}
 .nav-tab:last-child{border-right:none;}
-.nav-tab.active{background:rgba(0,85,160,.28);color:var(--silver-light);}
-.nav-tab:hover:not(.active){background:rgba(255,255,255,.04);}
-.view{display:none;width:100%;max-width:990px;gap:18px;flex-wrap:wrap;justify-content:center;}
+.nav-tab.active {
+  background:linear-gradient(135deg,rgba(0,85,160,0.4),rgba(0,85,160,0.2));
+  color:var(--white);
+}
+.nav-tab.active::after {
+  content:'';position:absolute;bottom:0;left:16px;right:16px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  border-radius:2px;
+}
+.nav-tab:hover:not(.active){background:rgba(255,255,255,.05);color:var(--text);}
+
+/* ── VIEWS ── */
+.view{display:none;width:100%;max-width:1020px;padding:20px 16px;gap:22px;flex-wrap:wrap;justify-content:center;}
 .view.on{display:flex;}
-.board-area{display:flex;flex-direction:column;align-items:center;}
-.b-files{display:flex;padding-left:20px;margin-bottom:2px;}
-.b-file{width:var(--sq);text-align:center;font-size:.62rem;font-weight:700;color:var(--muted);}
-.b-row-wrap{display:flex;}
-.b-ranks{display:flex;flex-direction:column;width:20px;}
-.b-rank{height:var(--sq);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:var(--muted);}
-#board,#pz-board{display:grid;grid-template-columns:repeat(8,var(--sq));
-  border:3px solid #0e2a56;border-radius:2px;overflow:hidden;
-  box-shadow:0 0 0 1px rgba(206,17,38,.5),0 0 0 5px #000c1e,0 0 0 6px rgba(206,17,38,.2),0 20px 70px rgba(0,0,0,.85);}
-.sq{width:var(--sq);height:var(--sq);display:flex;align-items:center;justify-content:center;
-  cursor:pointer;position:relative;user-select:none;transition:filter .1s;}
-.sq.light{background:var(--sq-light);}
-.sq.dark{background:var(--sq-dark);}
-.sq.sel{background:var(--sq-sel)!important;}
-.sq.last{background:var(--sq-last)!important;}
-.sq.incheck{background:var(--sq-check)!important;animation:chk 1s ease-in-out infinite;}
-@keyframes chk{0%,100%{box-shadow:inset 0 0 0 0 rgba(206,17,38,0)}50%{box-shadow:inset 0 0 20px 6px rgba(206,17,38,.6)}}
-.sq.dot::after{content:'';position:absolute;width:30%;height:30%;border-radius:50%;background:rgba(0,0,0,.22);pointer-events:none;z-index:2;}
-.sq.cap::after{content:'';position:absolute;inset:0;border:5px solid rgba(0,0,0,.22);pointer-events:none;z-index:2;}
-.sq.pz-ok{background:rgba(60,200,100,.5)!important;}
-.sq.pz-bad{animation:bad .45s ease both;}
-@keyframes bad{0%,100%{filter:brightness(1)}50%{filter:brightness(2) saturate(3);background:rgba(206,17,38,.95)!important}}
-.sq:hover{filter:brightness(1.1);}
-.piece{font-size:42px;line-height:1;display:flex;align-items:center;justify-content:center;
-  width:100%;height:100%;filter:drop-shadow(0 2px 3px rgba(0,0,0,.65));transition:transform .08s;}
-.sq:hover .piece{transform:scale(1.1);}
-.fly{position:fixed;z-index:9999;pointer-events:none;font-size:42px;line-height:1;
+
+/* ══════════════════════════════════════
+   CHESS BOARD — redesigned
+══════════════════════════════════════ */
+.board-wrap {display:flex;flex-direction:column;align-items:center;}
+.board-labels-top {
+  display:flex;padding-left:28px;margin-bottom:4px;
+}
+.lbl-file {
+  width:var(--sq);text-align:center;
+  font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:.15em;
+  color:var(--border2);
+}
+.board-mid {display:flex;}
+.lbl-ranks {
+  display:flex;flex-direction:column;
+  width:28px;padding-right:6px;
+}
+.lbl-rank {
+  height:var(--sq);display:flex;align-items:center;justify-content:flex-end;
+  font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:.1em;
+  color:var(--border2);
+}
+.board-frame {
+  padding:6px;
+  background:linear-gradient(145deg,#0a2a52,#051628,#0a2a52);
+  border-radius:6px;
+  box-shadow:
+    0 0 0 1px rgba(240,180,41,0.15),
+    0 0 0 2px rgba(0,85,160,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 24px 80px rgba(0,0,0,0.8),
+    0 0 60px rgba(0,85,160,0.2);
+}
+#board, #pz-board {
+  display:grid;
+  grid-template-columns:repeat(8,var(--sq));
+  border:1px solid rgba(240,180,41,0.12);
+  border-radius:2px;
+  overflow:hidden;
+}
+.sq {
+  width:var(--sq);height:var(--sq);
   display:flex;align-items:center;justify-content:center;
-  filter:drop-shadow(2px 4px 8px rgba(0,0,0,.8));
-  transition:left .18s cubic-bezier(.22,.8,.3,1),top .18s cubic-bezier(.22,.8,.3,1);}
-@keyframes burst{to{transform:scale(3.2);opacity:0}}
+  cursor:pointer;position:relative;user-select:none;
+  transition:filter .12s;
+}
+.sq.light {background:#c8dcec;}
+.sq.dark  {background:#1c4d8e;}
+.sq.light:hover{filter:brightness(1.08);}
+.sq.dark:hover {filter:brightness(1.15);}
+.sq.sel   {background:var(--sq-sel)!important;}
+.sq.last  {background:var(--sq-last)!important;}
+.sq.incheck {background:var(--sq-chk)!important;animation:chk 1s ease-in-out infinite;}
+@keyframes chk{0%,100%{box-shadow:inset 0 0 0 0 rgba(206,17,38,0)}50%{box-shadow:inset 0 0 24px 8px rgba(206,17,38,.7)}}
+.sq.dot::after{content:'';position:absolute;width:28%;height:28%;border-radius:50%;background:rgba(0,0,0,.25);pointer-events:none;z-index:2;}
+.sq.cap::after{content:'';position:absolute;inset:0;border:6px solid rgba(0,0,0,.2);border-radius:1px;pointer-events:none;z-index:2;}
+.sq.pz-ok {background:var(--sq-ok)!important;}
+.sq.pz-bad{animation:bad .4s ease both;}
+@keyframes bad{0%,100%{filter:brightness(1)}50%{filter:brightness(2.5) saturate(5);}}
+
+/* Pieces — larger, crisper */
+.piece {
+  font-size:46px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  width:100%;height:100%;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.7)) drop-shadow(0 0 1px rgba(0,0,0,.9));
+  transition:transform .08s;
+  will-change:transform;
+}
+.sq:hover .piece{transform:scale(1.12);}
+.sq.light .piece.wp { filter: drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
+
+/* Flying piece */
+.fly{position:fixed;z-index:9999;pointer-events:none;font-size:46px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(2px 5px 10px rgba(0,0,0,.85));
+  transition:left .17s cubic-bezier(.2,.8,.3,1),top .17s cubic-bezier(.2,.8,.3,1);}
+@keyframes burst{to{transform:scale(3.5);opacity:0}}
 .cburst{position:absolute;inset:0;pointer-events:none;z-index:10;animation:burst .35s ease-out forwards;}
-.cburst.w{background:radial-gradient(circle,rgba(255,200,60,.85),transparent 65%);}
-.cburst.b{background:radial-gradient(circle,rgba(206,17,38,.8),transparent 65%);}
-@keyframes placeIn{0%{transform:scale(1.3);opacity:.6}100%{transform:scale(1);opacity:1}}
-.place{animation:placeIn .16s ease-out both;}
-.status-bar{margin-top:8px;background:var(--panel);border:1px solid var(--border);border-radius:7px;
-  padding:8px 24px;font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.18em;
-  text-align:center;color:var(--text);width:calc(8 * var(--sq) + 20px);transition:all .25s;}
-.status-bar.chk{border-color:var(--red);color:var(--red);background:rgba(206,17,38,.1);}
-.status-bar.ok{border-color:#3dc878;color:#3dc878;background:rgba(61,200,120,.1);}
-.status-bar.fail{border-color:var(--red);color:var(--red);background:rgba(206,17,38,.1);}
-.think{height:3px;background:linear-gradient(90deg,transparent,var(--blue-light),var(--red),transparent);
-  background-size:200% 100%;animation:thk 1.1s linear infinite;border-radius:2px;
-  width:calc(8 * var(--sq) + 20px);opacity:0;transition:opacity .2s;margin-bottom:3px;}
+.cburst.w{background:radial-gradient(circle,rgba(255,210,60,.9),transparent 65%);}
+.cburst.b{background:radial-gradient(circle,rgba(206,17,38,.85),transparent 65%);}
+@keyframes plIn{0%{transform:scale(1.35);opacity:.5}100%{transform:scale(1);opacity:1}}
+.place{animation:plIn .15s ease-out both;}
+
+/* ── STATUS BAR ── */
+.status-bar {
+  margin-top:10px;
+  background:rgba(0,26,53,0.8);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:9px 28px;
+  font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;
+  text-align:center;color:var(--text);
+  width:calc(8 * var(--sq) + 40px);
+  backdrop-filter:blur(4px);
+  transition:all .25s;
+}
+.status-bar.chk  {border-color:var(--red);color:var(--red);background:rgba(206,17,38,.08);}
+.status-bar.ok   {border-color:var(--gold);color:var(--gold);background:rgba(240,180,41,.07);}
+.status-bar.fail {border-color:var(--red);color:var(--red);background:rgba(206,17,38,.08);}
+
+/* Thinking bar */
+.think {
+  height:3px;
+  background:linear-gradient(90deg,transparent,var(--blue2),var(--gold),var(--red),transparent);
+  background-size:200% 100%;animation:thk 1s linear infinite;border-radius:2px;
+  width:calc(8 * var(--sq) + 40px);opacity:0;transition:opacity .2s;margin-bottom:4px;
+}
 .think.on{opacity:1;}
 @keyframes thk{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.sidebar{width:268px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:11px;}
-.sb-head{border-bottom:2px solid var(--red);padding-bottom:7px;}
-.sb-head h2{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--silver-light);letter-spacing:.1em;}
-.pp{background:rgba(0,85,160,.07);border:1px solid var(--border);border-radius:7px;
-  padding:8px 10px;display:flex;align-items:center;gap:8px;transition:all .25s;}
-.pp.active{background:rgba(206,17,38,.13);border-color:rgba(206,17,38,.45);}
-.pp-av{width:40px;height:40px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;
-  justify-content:center;font-size:.72rem;font-weight:700;font-family:'Bebas Neue',sans-serif;border:2px solid var(--border);}
-.pp-av.white{background:var(--silver-light);color:var(--navy-deep);}
-.pp-av.black{background:#0a1f3a;color:var(--silver-light);border-color:#1a3a6a;}
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sidebar {
+  width:275px;
+  background:linear-gradient(160deg,var(--panel2) 0%,var(--panel) 100%);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  display:flex;flex-direction:column;gap:12px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.4);
+}
+.sb-head {
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:10px;
+}
+.sb-head-icon {font-size:1.1rem;}
+.sb-head h2 {
+  font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--white);letter-spacing:.15em;
+}
+/* Player panels */
+.pp {
+  background:rgba(0,85,160,.06);
+  border:1px solid var(--border);border-radius:9px;
+  padding:10px 12px;display:flex;align-items:center;gap:10px;
+  transition:all .25s;
+  position:relative;overflow:hidden;
+}
+.pp::before {
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--border2);transition:background .25s;border-radius:3px 0 0 3px;
+}
+.pp.active{background:rgba(206,17,38,.1);border-color:rgba(206,17,38,.4);}
+.pp.active::before{background:var(--red);}
+.pp-av {
+  width:42px;height:42px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;font-family:'Bebas Neue',sans-serif;
+  border:2px solid var(--border);
+  transition:border-color .25s;text-align:center;line-height:1.1;
+}
+.pp-av.white{background:linear-gradient(135deg,#e8f4fc,#c8dcec);color:var(--deep);}
+.pp-av.black{background:linear-gradient(135deg,#0a1e36,#051428);color:var(--light);border-color:#1a3a6a;}
 .pp.active .pp-av{border-color:var(--red);}
 .pp-info{flex:1;min-width:0;}
-.pp-name{font-size:.8rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pp-num{font-size:.58rem;color:var(--muted);}
-.pp-st{font-size:.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
-.pp-timer{font-family:monospace;font-size:1.05rem;color:var(--blue-light);min-width:50px;text-align:right;font-weight:700;}
-.pp-timer.low{color:var(--red);animation:blink .7s ease-in-out infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.sec-lbl{font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--muted);
-  text-transform:uppercase;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);padding-bottom:5px;}
-.move-list{background:rgba(0,0,0,.2);border-radius:5px;padding:6px;max-height:120px;overflow-y:auto;font-size:.78rem;font-family:monospace;}
+.pp-name{font-size:.82rem;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pp-num{font-size:.6rem;color:var(--muted);letter-spacing:.06em;}
+.pp-st{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+.pp-timer{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--blue2);min-width:54px;text-align:right;letter-spacing:.05em;}
+.pp-timer.low{color:var(--red);animation:blink .65s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* Move list */
+.sec-lbl{font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:.25em;color:var(--muted);
+  text-transform:uppercase;text-align:center;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:6px;}
+.move-list{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.04);border-radius:6px;padding:7px;
+  max-height:120px;overflow-y:auto;font-size:.78rem;font-family:monospace;}
 .move-list::-webkit-scrollbar{width:3px;}
-.move-list::-webkit-scrollbar-thumb{background:var(--border);}
+.move-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 .mrow{display:grid;grid-template-columns:24px 1fr 1fr;gap:2px;padding:1px 0;}
 .mnum{color:var(--muted);}
-.mw{color:var(--silver-light);}
+.mw{color:var(--lighter);}
 .mb{color:#6ab4f5;}
 .mrow.lat .mw,.mrow.lat .mb{color:#fff;font-weight:700;}
+
+/* Controls */
 .ctrl{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
 .btn{padding:8px 6px;border:1px solid var(--border);background:transparent;color:var(--text);
-  border-radius:6px;font-family:'Bebas Neue',sans-serif;cursor:pointer;transition:all .14s;letter-spacing:.1em;font-size:.82rem;}
-.btn:hover{border-color:var(--blue-light);color:var(--silver-light);background:rgba(0,85,160,.12);}
+  border-radius:7px;font-family:'Bebas Neue',sans-serif;cursor:pointer;transition:all .14s;
+  letter-spacing:.12em;font-size:.82rem;}
+.btn:hover{border-color:var(--blue2);color:var(--white);background:rgba(0,85,160,.15);}
 .btn.red{background:var(--red);color:#fff;border-color:var(--red);}
-.btn.red:hover{background:#a50d1e;}
-.btn.green{background:rgba(61,200,120,.18);border-color:#3dc878;color:#3dc878;}
-.pz-sb{width:268px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:11px;}
-.pz-sb-head{border-bottom:2px solid var(--blue-light);padding-bottom:7px;}
-.pz-sb-head h2{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--silver-light);letter-spacing:.1em;}
-.pz-count{text-align:center;}
-.pz-big{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--blue-light);line-height:1;}
-.pz-big span{color:var(--muted);font-size:1.4rem;}
-.pz-clabel{font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;}
-.pz-bar-bg{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-top:5px;}
-.pz-bar-fill{height:6px;background:linear-gradient(90deg,var(--blue-light),var(--red));border-radius:3px;transition:width .4s;}
-.pz-bar-lbl{font-size:.58rem;color:var(--muted);letter-spacing:.1em;margin-top:3px;}
+.btn.red:hover{background:var(--red2);}
+.btn.gold{background:rgba(240,180,41,.18);border-color:var(--gold);color:var(--gold);}
+.btn.gold:hover{background:rgba(240,180,41,.28);}
+
+/* ══════════════════════════════════════
+   PUZZLE SIDEBAR
+══════════════════════════════════════ */
+.pz-sb {
+  width:275px;
+  background:linear-gradient(160deg,var(--panel2) 0%,var(--panel) 100%);
+  border:1px solid var(--border);border-radius:12px;padding:16px;
+  display:flex;flex-direction:column;gap:12px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.4);
+}
+.pz-sb-head{border-bottom:1px solid var(--border);padding-bottom:10px;}
+.pz-sb-head h2{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--white);letter-spacing:.15em;}
+.pz-count-box{
+  background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:8px;padding:12px;
+  text-align:center;
+}
+.pz-big{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--blue2);line-height:1;}
+.pz-big em{font-style:normal;color:var(--muted);font-size:1.4rem;}
+.pz-clabel{font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
+.pz-bar-bg{height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
+.pz-bar-fill{height:7px;background:linear-gradient(90deg,var(--blue2),var(--gold),var(--red));border-radius:4px;transition:width .5s;}
+.pz-bar-lbl{font-size:.58rem;color:var(--muted);letter-spacing:.1em;margin-top:4px;}
+
+/* Progress pips */
 .pz-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
-.pz-pip{height:8px;border-radius:2px;background:rgba(255,255,255,.07);cursor:pointer;transition:background .3s;}
-.pz-pip:hover{filter:brightness(1.4);}
-.pz-pip.solved{background:#3dc878;}
-.pz-pip.failed{background:var(--red);}
-.pz-pip.skipped{background:#556;}
-.pz-pip.cur{background:rgba(255,215,0,.8);animation:pipblink 1s ease-in-out infinite;}
+.pz-pip{height:9px;border-radius:3px;background:rgba(255,255,255,.07);cursor:pointer;transition:all .25s;}
+.pz-pip:hover{filter:brightness(1.5);transform:scaleY(1.3);}
+.pz-pip.solved{background:linear-gradient(135deg,#3dc878,#2aaa60);}
+.pz-pip.failed{background:linear-gradient(135deg,#e04040,var(--red));}
+.pz-pip.skipped{background:#445566;}
+.pz-pip.cur{background:var(--gold);animation:pipblink 1s ease-in-out infinite;}
 @keyframes pipblink{0%,100%{opacity:1}50%{opacity:.3}}
-.pz-info{background:rgba(0,85,160,.07);border:1px solid var(--border);border-radius:7px;padding:9px 11px;}
-.pz-theme{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--red);letter-spacing:.1em;}
-.pz-desc{font-size:.72rem;color:var(--muted);margin-top:3px;line-height:1.4;}
-.pz-turnlbl{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--silver-light);margin-top:5px;font-weight:700;}
-.pz-hint{background:rgba(206,17,38,.07);border:1px dashed rgba(206,17,38,.4);border-radius:6px;
-  padding:7px 9px;font-size:.72rem;color:rgba(220,110,110,1);line-height:1.4;}
-.pz-fb{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.12em;min-height:26px;transition:color .3s;}
+
+/* Puzzle info */
+.pz-info{background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.pz-theme{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--gold);letter-spacing:.12em;}
+.pz-desc{font-size:.73rem;color:var(--muted);margin-top:4px;line-height:1.45;}
+.pz-turnlbl{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lighter);margin-top:6px;font-weight:700;}
+.pz-hint{background:rgba(240,180,41,.06);border:1px dashed rgba(240,180,41,.3);border-radius:6px;
+  padding:8px 10px;font-size:.72rem;color:rgba(240,180,41,.9);line-height:1.4;}
+.pz-fb{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.12em;min-height:26px;}
 .pz-fb.ok{color:#3dc878;}
 .pz-fb.fail{color:var(--red);}
 .pz-ctrl{display:flex;flex-direction:column;gap:6px;}
 .pz-ctrl .btn{width:100%;padding:9px;}
-.overlay{position:fixed;inset:0;background:rgba(0,5,20,.95);z-index:200;display:flex;align-items:center;justify-content:center;}
-@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
-.setup-box{background:var(--panel);border:1px solid var(--border);border-top:4px solid var(--red);
-  border-radius:14px;padding:30px 38px;text-align:center;max-width:560px;width:96%;
-  box-shadow:0 28px 80px rgba(0,0,0,.9);animation:slideUp .32s cubic-bezier(.34,1.56,.64,1) both;}
-.setup-box h2{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:.1em;color:var(--silver-light);margin-bottom:3px;}
-.setup-box .sub{font-size:.7rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px;}
-.mode-tog{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px;}
-.mode-btn{flex:1;padding:10px;background:transparent;color:var(--muted);border:none;
-  font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.1em;cursor:pointer;transition:all .16s;}
-.mode-btn.active{background:rgba(0,85,160,.28);color:var(--silver-light);}
-.slbl{font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--muted);text-align:left;margin-bottom:7px;text-transform:uppercase;}
-.bot-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:13px;text-align:left;max-height:220px;overflow-y:auto;}
+
+/* ══════════════════════════════════════
+   MODALS
+══════════════════════════════════════ */
+.overlay{position:fixed;inset:0;background:rgba(0,8,20,.96);z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  animation:fadeIn .25s ease both;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+
+/* Setup modal */
+.setup-box {
+  background:linear-gradient(160deg,#00213f,#000e1f);
+  border:1px solid var(--border);border-top:3px solid var(--red);
+  border-radius:16px;padding:32px 40px;text-align:center;max-width:580px;width:96%;
+  box-shadow:0 32px 100px rgba(0,0,0,.95);
+  animation:slideUp .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+.setup-box h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em;color:var(--white);margin-bottom:3px;}
+.setup-box .sub{font-size:.7rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:18px;}
+.mode-tog{display:flex;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px;}
+.mode-btn{flex:1;padding:11px;background:transparent;color:var(--muted);border:none;
+  font-family:'Bebas Neue',sans-serif;font-size:.92rem;letter-spacing:.12em;cursor:pointer;transition:all .18s;}
+.mode-btn.active{background:rgba(0,85,160,.35);color:var(--white);}
+.mode-btn:hover:not(.active){background:rgba(255,255,255,.05);}
+.slbl{font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:.22em;color:var(--muted);text-align:left;margin-bottom:8px;text-transform:uppercase;}
+
+/* Bot grid */
+.bot-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:14px;text-align:left;max-height:230px;overflow-y:auto;}
 .bot-grid::-webkit-scrollbar{width:3px;}
-.bot-grid::-webkit-scrollbar-thumb{background:var(--border);}
-.bot-btn{padding:8px 10px;border:1px solid var(--border);background:rgba(0,85,160,.06);
-  color:var(--text);border-radius:7px;cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:8px;}
-.bot-btn:hover{border-color:var(--blue-light);background:rgba(0,85,160,.16);}
-.bot-btn.sel{border-color:var(--red);background:rgba(206,17,38,.14);}
-.bav{width:32px;height:32px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;
-  justify-content:center;font-size:.62rem;font-weight:700;font-family:'Bebas Neue',sans-serif;
-  border:2px solid var(--border);background:#0a1f3a;color:var(--silver-light);}
-.bname{font-size:.75rem;font-weight:700;}
-.bnum{font-size:.56rem;color:var(--muted);}
+.bot-grid::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.bot-btn{padding:9px 11px;border:1px solid var(--border);background:rgba(0,33,63,.5);
+  color:var(--text);border-radius:8px;cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:9px;}
+.bot-btn:hover{border-color:var(--blue2);background:rgba(0,85,160,.2);}
+.bot-btn.sel{border-color:var(--gold);background:rgba(240,180,41,.1);}
+.bav{width:34px;height:34px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;font-size:.65rem;font-weight:700;font-family:'Bebas Neue',sans-serif;
+  border:2px solid var(--border);background:linear-gradient(135deg,#0a1e36,#051428);color:var(--light);}
+.bot-btn.sel .bav{border-color:var(--gold);}
+.binfo .bname{font-size:.76rem;font-weight:700;color:var(--lighter);}
+.binfo .bnum{font-size:.58rem;color:var(--muted);}
 .bpips{display:flex;gap:2px;margin-top:3px;}
-.pip{display:inline-block;width:7px;height:7px;border-radius:50%;}
-.color-row{display:flex;gap:7px;justify-content:center;margin-bottom:12px;}
-.col-btn{flex:1;padding:8px;border:1px solid var(--border);background:transparent;color:var(--text);
-  border-radius:7px;cursor:pointer;transition:all .15s;font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.1em;}
-.col-btn:hover{border-color:var(--blue-light);}
-.col-btn.sel{border-color:var(--red);background:rgba(206,17,38,.14);}
+.pip{display:inline-block;width:8px;height:8px;border-radius:50%;}
+
+/* Skill tier labels */
+.skill-badge {
+  display:inline-block;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:1px 5px;border-radius:3px;margin-left:4px;font-weight:700;
+  vertical-align:middle;
+}
+
+/* Color + time selectors */
+.color-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px;}
+.col-btn{flex:1;padding:9px;border:1px solid var(--border);background:rgba(0,0,0,.3);
+  color:var(--text);border-radius:8px;cursor:pointer;transition:all .15s;
+  font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:.1em;}
+.col-btn:hover{border-color:var(--blue2);}
+.col-btn.sel{border-color:var(--gold);background:rgba(240,180,41,.1);color:var(--gold);}
 .time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;}
-.t-btn{padding:11px 4px;border:1px solid var(--border);background:rgba(0,85,160,.07);
-  color:var(--text);border-radius:7px;cursor:pointer;transition:all .15s;font-family:'Bebas Neue',sans-serif;font-size:.88rem;}
-.t-btn:hover{border-color:var(--blue-light);}
-.t-btn.sel{border-color:var(--red);background:rgba(206,17,38,.16);color:#fff;}
-.tbn{display:block;font-size:.95rem;}
+.t-btn{padding:11px 4px;border:1px solid var(--border);background:rgba(0,0,0,.3);
+  color:var(--text);border-radius:8px;cursor:pointer;transition:all .15s;
+  font-family:'Bebas Neue',sans-serif;font-size:.88rem;}
+.t-btn:hover{border-color:var(--blue2);}
+.t-btn.sel{border-color:var(--gold);background:rgba(240,180,41,.1);color:var(--gold);}
+.tbn{display:block;font-size:1rem;}
 .tbd{display:block;font-size:.56rem;color:var(--muted);margin-top:2px;font-family:'Barlow Condensed',sans-serif;}
-.t-btn.sel .tbd{color:rgba(255,255,255,.55);}
-.cust{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.cust label{font-size:.72rem;color:var(--muted);white-space:nowrap;text-transform:uppercase;}
-.cust input,.name-inp{flex:1;padding:7px 10px;background:rgba(0,0,0,.28);border:1px solid var(--border);
-  border-radius:6px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:.9rem;outline:none;}
-.cust input:focus,.name-inp:focus{border-color:var(--blue-light);}
-.name-row{display:flex;gap:9px;margin-bottom:12px;}
+.t-btn.sel .tbd{color:rgba(240,180,41,.7);}
+.cust{display:flex;align-items:center;gap:9px;margin-bottom:18px;}
+.cust label{font-size:.72rem;color:var(--muted);white-space:nowrap;text-transform:uppercase;letter-spacing:.1em;}
+.cust input,.name-inp{flex:1;padding:8px 11px;background:rgba(0,0,0,.35);border:1px solid var(--border);
+  border-radius:7px;color:var(--white);font-family:'Barlow Condensed',sans-serif;font-size:.95rem;outline:none;}
+.cust input:focus,.name-inp:focus{border-color:var(--blue2);}
+.name-row{display:flex;gap:10px;margin-bottom:14px;}
 .name-col{flex:1;text-align:left;}
-.start-btn{width:100%;padding:12px;background:var(--red);color:#fff;border:none;
-  border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;cursor:pointer;}
-.start-btn:hover{background:#a80d1d;}
-.start-btn:disabled{background:#3a3a3a;cursor:not-allowed;}
-.mbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;
-  padding:36px 44px;text-align:center;max-width:360px;width:90%;
-  box-shadow:0 28px 90px rgba(0,0,0,.92);display:flex;flex-direction:column;gap:10px;
-  animation:slideUp .36s cubic-bezier(.34,1.56,.64,1) both;}
-.mbox.rt{border-top:4px solid var(--red);}
-.mbox.gt{border-top:4px solid #3dc878;}
-.mico{font-size:2.8rem;}
-.mtitle{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em;color:var(--silver-light);}
-.msub{font-size:.68rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;line-height:1.6;}
-.mwinner{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.1em;color:var(--blue-light);}
-.mbtns{display:flex;gap:9px;justify-content:center;margin-top:4px;}
-.mdl-timer{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--blue-light);letter-spacing:.1em;}
-.mbox.gt .mtitle{color:#3dc878;}
-#promo-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center;}
+.start-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;border:none;
+  border-radius:9px;font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.18em;cursor:pointer;
+  box-shadow:0 4px 20px rgba(206,17,38,.4);transition:all .15s;}
+.start-btn:hover{background:linear-gradient(135deg,#e01430,var(--red));box-shadow:0 6px 28px rgba(206,17,38,.5);}
+.start-btn:disabled{background:#2a3a4a;box-shadow:none;cursor:not-allowed;}
+
+/* Generic modal box */
+.mbox{
+  background:linear-gradient(160deg,#00213f,#000e1f);
+  border:1px solid var(--border);border-radius:16px;
+  padding:38px 48px;text-align:center;max-width:380px;width:92%;
+  box-shadow:0 32px 100px rgba(0,0,0,.95);
+  display:flex;flex-direction:column;gap:11px;
+  animation:slideUp .38s cubic-bezier(.34,1.56,.64,1) both;
+}
+.mbox.rt{border-top:3px solid var(--red);}
+.mbox.gt{border-top:3px solid var(--gold);}
+.mico{font-size:3rem;}
+.mtitle{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.1em;color:var(--white);}
+.mbox.gt .mtitle{color:var(--gold);}
+.msub{font-size:.68rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;line-height:1.7;}
+.mwinner{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.1em;color:var(--blue2);}
+.mbtns{display:flex;gap:10px;justify-content:center;margin-top:5px;}
+.mdl-timer{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--blue2);letter-spacing:.1em;}
+
+/* Promotion modal */
+#promo-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:100;align-items:center;justify-content:center;}
 #promo-modal.on{display:flex;}
-.promo-box{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--red);
-  border-radius:12px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:13px;
-  box-shadow:0 20px 60px rgba(0,0,0,.9);animation:slideUp .28s cubic-bezier(.34,1.56,.64,1) both;}
-.promo-box h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.14em;color:var(--silver-light);}
-.promo-row{display:flex;gap:9px;}
-.promo-p{width:66px;height:66px;border:2px solid var(--border);border-radius:7px;
-  display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;transition:all .14s;}
-.promo-p:hover{border-color:var(--red);transform:scale(1.1);}
-@media(max-width:820px){
+.promo-box{background:linear-gradient(160deg,#00213f,#000e1f);border:1px solid var(--border);border-top:3px solid var(--gold);
+  border-radius:14px;padding:26px;display:flex;flex-direction:column;align-items:center;gap:14px;
+  box-shadow:0 24px 80px rgba(0,0,0,.9);animation:slideUp .28s cubic-bezier(.34,1.56,.64,1) both;}
+.promo-box h3{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.15em;color:var(--white);}
+.promo-row{display:flex;gap:10px;}
+.promo-p{width:68px;height:68px;border:2px solid var(--border);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:40px;cursor:pointer;
+  transition:all .15s;background:rgba(0,0,0,.3);}
+.promo-p:hover{border-color:var(--gold);background:rgba(240,180,41,.1);transform:scale(1.1);}
+
+@media(max-width:840px){
   .view{flex-direction:column;}
   .sidebar,.pz-sb{width:100%;}
-  :root{--sq:48px;}
-  .piece{font-size:28px;}
-  .fly{font-size:28px;}
-  .setup-box{padding:20px 16px;}
+  :root{--sq:50px;}
+  .piece{font-size:32px;}
+  .fly{font-size:32px;}
+  .setup-box{padding:22px 18px;}
   .time-grid{grid-template-columns:repeat(2,1fr);}
   .bot-grid{grid-template-columns:1fr;}
+  .mbox{padding:28px 24px;}
 }
 </style>
 </head>
 <body>
 
+<!-- SETUP MODAL -->
 <div class="overlay" id="setup-modal">
   <div class="setup-box">
     <h2>💥 CBJ Chess</h2>
@@ -242,7 +463,7 @@ body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--
       <button class="mode-btn" id="m-bot" onclick="setMode('bot')">🤖 vs Bot</button>
     </div>
     <div id="bot-sec" style="display:none">
-      <div class="slbl">Choose opponent</div>
+      <div class="slbl">Choose your opponent</div>
       <div class="bot-grid" id="bot-grid"></div>
       <div class="slbl">You play as</div>
       <div class="color-row">
@@ -253,8 +474,8 @@ body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--
     </div>
     <div id="ovo-sec">
       <div class="name-row">
-        <div class="name-col"><div class="slbl">White</div><input class="name-inp" id="p1" placeholder="Player 1"></div>
-        <div class="name-col"><div class="slbl">Black</div><input class="name-inp" id="p2" placeholder="Player 2"></div>
+        <div class="name-col"><div class="slbl">White Player</div><input class="name-inp" id="p1" placeholder="Player 1"></div>
+        <div class="name-col"><div class="slbl">Black Player</div><input class="name-inp" id="p2" placeholder="Player 2"></div>
       </div>
     </div>
     <div class="slbl" style="margin-top:10px">Time Control</div>
@@ -264,6 +485,7 @@ body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--
   </div>
 </div>
 
+<!-- PROMO MODAL -->
 <div id="promo-modal">
   <div class="promo-box">
     <h3>Promote Pawn</h3>
@@ -271,7 +493,8 @@ body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--
   </div>
 </div>
 
-<div id="go-modal" style="display:none;position:fixed;inset:0;background:rgba(0,5,20,.9);z-index:100;align-items:center;justify-content:center;">
+<!-- GAME OVER -->
+<div id="go-modal" style="display:none;position:fixed;inset:0;background:rgba(0,8,20,.92);z-index:100;align-items:center;justify-content:center;">
   <div class="mbox rt">
     <div class="mico" id="go-ico">💥</div>
     <div class="mtitle" id="go-title">Game Over</div>
@@ -281,50 +504,58 @@ body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--
   </div>
 </div>
 
-<div id="pc-modal" style="display:none;position:fixed;inset:0;background:rgba(0,5,20,.88);z-index:100;align-items:center;justify-content:center;">
+<!-- PUZZLE COMPLETE -->
+<div id="pc-modal" style="display:none;position:fixed;inset:0;background:rgba(0,8,20,.9);z-index:100;align-items:center;justify-content:center;">
   <div class="mbox gt">
     <div class="mico">🎯</div>
     <div class="mtitle">Puzzle Solved!</div>
     <div class="msub" id="pc-sub"></div>
     <div class="mwinner" id="pc-stat"></div>
     <div class="mbtns">
-      <button class="btn green" onclick="nextPuzzle()">Next →</button>
+      <button class="btn gold" onclick="nextPuzzle()">Next →</button>
       <button class="btn" onclick="document.getElementById('pc-modal').style.display='none'">Review</button>
     </div>
   </div>
 </div>
 
-<div id="dl-modal" style="display:none;position:fixed;inset:0;background:rgba(0,5,20,.9);z-index:100;align-items:center;justify-content:center;">
+<!-- DAILY LIMIT -->
+<div id="dl-modal" style="display:none;position:fixed;inset:0;background:rgba(0,8,20,.9);z-index:100;align-items:center;justify-content:center;">
   <div class="mbox rt">
     <div class="mico">🏒</div>
     <div class="mtitle" style="color:var(--red)">Daily Limit!</div>
-    <div class="msub">All 100 puzzles done for today.<br>Come back tomorrow!</div>
+    <div class="msub">All 100 puzzles completed for today.<br>The rink resets at midnight!</div>
     <div class="mdl-timer" id="dl-timer">--:--:--</div>
-    <button class="btn" style="margin-top:6px" onclick="document.getElementById('dl-modal').style.display='none'">Close</button>
+    <button class="btn" style="margin-top:4px" onclick="document.getElementById('dl-modal').style.display='none'">Close</button>
   </div>
 </div>
 
-<div class="logo"><span class="logo-icon">💥</span><h1>CBJ <span>Chess</span></h1></div>
-
-<div class="nav">
-  <button class="nav-tab active" id="tab-play" onclick="showView('play')">♟ Play</button>
-  <button class="nav-tab" id="tab-pz" onclick="showView('pz')">🧩 Puzzles</button>
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-row">
+    <span class="logo-cannon">💥</span>
+    <span class="logo-text">CBJ <em>Chess</em></span>
+  </div>
+  <div class="nav">
+    <button class="nav-tab active" id="tab-play" onclick="showView('play')">♟ Play</button>
+    <button class="nav-tab" id="tab-pz" onclick="showView('pz')">🧩 Puzzles</button>
+  </div>
 </div>
 
+<!-- PLAY VIEW -->
 <div class="view on" id="v-play">
-  <div class="board-area">
+  <div class="board-wrap">
     <div class="think" id="think-bar"></div>
-    <div>
-      <div class="b-files" id="b-files"></div>
-      <div class="b-row-wrap">
-        <div class="b-ranks" id="b-ranks"></div>
+    <div class="board-labels-top" id="b-files"></div>
+    <div class="board-mid">
+      <div class="lbl-ranks" id="b-ranks"></div>
+      <div class="board-frame">
         <div id="board"></div>
       </div>
     </div>
     <div class="status-bar" id="status-bar">White's Turn</div>
   </div>
   <div class="sidebar">
-    <div class="sb-head"><h2>⚡ Match</h2></div>
+    <div class="sb-head"><span class="sb-head-icon">⚡</span><h2>Match</h2></div>
     <div class="pp active" id="wp">
       <div class="pp-av white" id="w-av">W</div>
       <div class="pp-info"><div class="pp-name" id="w-name">White</div><div class="pp-num" id="w-num"></div><div class="pp-st" id="w-st">Your Turn</div></div>
@@ -344,12 +575,13 @@ body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--
   </div>
 </div>
 
+<!-- PUZZLE VIEW -->
 <div class="view" id="v-pz">
-  <div class="board-area">
-    <div>
-      <div class="b-files" id="pz-files"></div>
-      <div class="b-row-wrap">
-        <div class="b-ranks" id="pz-ranks"></div>
+  <div class="board-wrap">
+    <div class="board-labels-top" id="pz-files"></div>
+    <div class="board-mid">
+      <div class="lbl-ranks" id="pz-ranks"></div>
+      <div class="board-frame">
         <div id="pz-board"></div>
       </div>
     </div>
@@ -357,17 +589,17 @@ body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--
   </div>
   <div class="pz-sb">
     <div class="pz-sb-head"><h2>🧩 Daily Puzzles</h2></div>
-    <div class="pz-count">
-      <div class="pz-big"><span id="pz-done">0</span><span>/100</span></div>
+    <div class="pz-count-box">
+      <div class="pz-big"><span id="pz-done">0</span><em>/100</em></div>
       <div class="pz-clabel">Puzzles Today</div>
       <div class="pz-bar-bg"><div class="pz-bar-fill" id="pz-fill" style="width:0%"></div></div>
       <div class="pz-bar-lbl" id="pz-blbl">0 of 100 completed</div>
     </div>
-    <div class="sec-lbl">Progress — click to jump</div>
+    <div class="sec-lbl">Progress — tap to jump</div>
     <div class="pz-grid" id="pz-pip-grid"></div>
     <div class="pz-info">
       <div class="pz-theme" id="pz-theme">—</div>
-      <div class="pz-desc" id="pz-desc">Loading...</div>
+      <div class="pz-desc" id="pz-desc">Loading puzzle...</div>
       <div class="pz-turnlbl" id="pz-turn"></div>
     </div>
     <div class="pz-hint" id="pz-hint" style="display:none"></div>
@@ -375,16 +607,152 @@ body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--
     <div class="pz-ctrl">
       <button class="btn" onclick="pzHint()">💡 Hint</button>
       <button class="btn" onclick="pzReveal()">👁 Show Solution</button>
-      <button class="btn green" onclick="nextPuzzle()">Next Puzzle →</button>
+      <button class="btn gold" onclick="nextPuzzle()">Next Puzzle →</button>
       <button class="btn" onclick="skipPuzzle()">Skip ↷</button>
     </div>
   </div>
 </div>
 
 <script>
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════
+// ACCURATE CBJ ROSTER (2024-25 season)
+// Sources: ESPN, NHL.com
+// ════════════════════════════════════════
+const BOTS = [
+  // Tier 1 — Fringe / scratches (worst chess)
+  {name:"Isac Lundestrom", num:"#21", init:"IL", skill:"4th Line",   tier:"Scratch",  depth:1, err:.82, pips:1, pc:"#c44"},
+  {name:"Danton Heinen",   num:"#43", init:"DH", skill:"4th Line",   tier:"Scratch",  depth:1, err:.72, pips:1, pc:"#c44"},
+  // Tier 2 — Bottom 6 regulars
+  {name:"Dmitri Voronkov", num:"#10", init:"DV", skill:"Bottom-6",   tier:"Bottom-6", depth:1, err:.52, pips:2, pc:"#d74"},
+  {name:"Mason Marchment", num:"#17", init:"MM", skill:"Bottom-6",   tier:"Bottom-6", depth:1, err:.40, pips:2, pc:"#d74"},
+  // Tier 3 — Solid roster players
+  {name:"Cole Sillinger",  num:"#4",  init:"CS", skill:"Middle-6",   tier:"Mid-6",    depth:2, err:.28, pips:3, pc:"#cc4"},
+  {name:"Miles Wood",      num:"#11", init:"MW", skill:"Middle-6",   tier:"Mid-6",    depth:2, err:.20, pips:3, pc:"#cc4"},
+  // Tier 4 — Top 6 forwards
+  {name:"Sean Monahan",    num:"#23", init:"SM", skill:"Top-6 Fwd",  tier:"Top-6",    depth:2, err:.11, pips:4, pc:"#8c8"},
+  {name:"Kent Johnson",    num:"#91", init:"KJ", skill:"Top-6 Fwd",  tier:"Top-6",    depth:2, err:.06, pips:4, pc:"#8c8"},
+  // Tier 5 — Stars
+  {name:"Adam Fantilli",   num:"#19", init:"AF", skill:"Star Fwd",   tier:"Star",     depth:3, err:.03, pips:5, pc:"#4af"},
+  {name:"Zach Werenski",   num:"#8",  init:"ZW", skill:"Star D",     tier:"Star",     depth:3, err:.01, pips:5, pc:"#4af"},
+  // Tier 6 — Elite (hardest bots)
+  {name:"Patrik Laine",    num:"#29", init:"PL", skill:"Elite Fwd",  tier:"Elite",    depth:3, err:.00, pips:6, pc:"#f90"},
+  {name:"Boone Jenner",    num:"#38", init:"BJ", skill:"Captain",    tier:"Captain",  depth:4, err:.00, pips:6, pc:"#f90"},
+];
+
+const TIER_COLORS = {
+  "Scratch":  {bg:"rgba(180,40,40,.15)", border:"rgba(180,40,40,.4)", text:"#e44"},
+  "Bottom-6": {bg:"rgba(200,100,30,.12)", border:"rgba(200,100,30,.35)", text:"#d74"},
+  "Mid-6":    {bg:"rgba(180,180,30,.1)", border:"rgba(180,180,30,.3)", text:"#cc4"},
+  "Top-6":    {bg:"rgba(40,180,80,.1)", border:"rgba(40,180,80,.3)", text:"#8c8"},
+  "Star":     {bg:"rgba(30,140,220,.12)", border:"rgba(30,140,220,.35)", text:"#4af"},
+  "Elite":    {bg:"rgba(240,150,30,.12)", border:"rgba(240,150,30,.35)", text:"#f90"},
+  "Captain":  {bg:"rgba(240,150,30,.18)", border:"rgba(240,150,30,.5)", text:"#fc0"},
+};
+
+const TIME_PRESETS=[{n:"Bullet",t:1,d:"1 min"},{n:"Blitz",t:3,d:"3 min"},{n:"Blitz",t:5,d:"5 min"},{n:"Rapid",t:10,d:"10 min"},{n:"Rapid",t:15,d:"15 min"},{n:"Classic",t:30,d:"30 min"}];
+
+// ════════════════════════════════════════
+// SETUP UI
+// ════════════════════════════════════════
+let gMode='1v1', selBot=null, pColor='w', selTime=3;
+let vsBot=false, botClr='b', curBot=null;
+
+function setMode(m){
+  gMode=m;
+  document.getElementById('m-1v1').classList.toggle('active',m==='1v1');
+  document.getElementById('m-bot').classList.toggle('active',m==='bot');
+  document.getElementById('bot-sec').style.display=m==='bot'?'block':'none';
+  document.getElementById('ovo-sec').style.display=m==='bot'?'none':'block';
+  document.getElementById('start-btn').disabled=m==='bot'&&selBot===null;
+}
+function setColor(c){
+  pColor=c;
+  ['cw','cb','cr'].forEach(id=>document.getElementById(id).classList.remove('sel'));
+  document.getElementById(c==='w'?'cw':c==='b'?'cb':'cr').classList.add('sel');
+}
+
+(function buildBotGrid(){
+  const g=document.getElementById('bot-grid');
+  BOTS.forEach((b,i)=>{
+    const tc=TIER_COLORS[b.tier]||TIER_COLORS["Mid-6"];
+    const btn=document.createElement('button');btn.className='bot-btn';
+    const pips=Array.from({length:6},(_,pi)=>`<span class="pip" style="background:${pi<b.pips?b.pc:'#1a3055'}"></span>`).join('');
+    btn.innerHTML=`<div class="bav">${b.init}</div><div class="binfo"><div class="bname">${b.name} <span style="font-size:.5rem;color:${tc.text};background:${tc.bg};border:1px solid ${tc.border};padding:1px 4px;border-radius:3px;letter-spacing:.06em">${b.tier.toUpperCase()}</span></div><div class="bnum">${b.num}</div><div class="bpips">${pips}</div></div>`;
+    btn.onclick=()=>{document.querySelectorAll('.bot-btn').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel');selBot=i;document.getElementById('start-btn').disabled=false;};
+    g.appendChild(btn);
+  });
+})();
+
+(function buildTimeGrid(){
+  const g=document.getElementById('time-grid');
+  TIME_PRESETS.forEach((p,i)=>{
+    const btn=document.createElement('button');btn.className='t-btn'+(i===selTime?' sel':'');
+    btn.innerHTML=`<span class="tbn">${p.n}</span><span class="tbd">${p.d}</span>`;
+    btn.onclick=()=>{document.querySelectorAll('.t-btn').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel');selTime=i;document.getElementById('cust-time').value=p.t;};
+    g.appendChild(btn);
+  });
+})();
+document.getElementById('cust-time').value=TIME_PRESETS[selTime].t;
+
+function buildCoords(fEl,rEl){
+  fEl.innerHTML='';rEl.innerHTML='';
+  ['a','b','c','d','e','f','g','h'].forEach(f=>{const d=document.createElement('div');d.className='lbl-file';d.textContent=f;fEl.appendChild(d);});
+  for(let r=0;r<8;r++){const d=document.createElement('div');d.className='lbl-rank';d.textContent=8-r;rEl.appendChild(d);}
+}
+buildCoords(document.getElementById('b-files'),document.getElementById('b-ranks'));
+
+// ════════════════════════════════════════
+// VIEW SWITCHING
+// ════════════════════════════════════════
+let pzInited=false;
+function showView(v){
+  if(v==='pz') document.getElementById('setup-modal').style.display='none';
+  document.getElementById('v-play').classList.toggle('on',v==='play');
+  document.getElementById('v-pz').classList.toggle('on',v==='pz');
+  document.getElementById('tab-play').classList.toggle('active',v==='play');
+  document.getElementById('tab-pz').classList.toggle('active',v==='pz');
+  if(v==='pz'&&!pzInited){pzInited=true;buildCoords(document.getElementById('pz-files'),document.getElementById('pz-ranks'));initPuzzles();}
+}
+
+// ════════════════════════════════════════
+// GAME START
+// ════════════════════════════════════════
+function startGame(){
+  const mins=Math.max(1,parseInt(document.getElementById('cust-time').value)||10);
+  wTime=mins*60;bTime=mins*60;updateTimers();
+  if(gMode==='1v1'){
+    vsBot=false;
+    const p1=document.getElementById('p1').value.trim()||'White';
+    const p2=document.getElementById('p2').value.trim()||'Black';
+    setPL('w',p1,'',p1.slice(0,2).toUpperCase());
+    setPL('b',p2,'',p2.slice(0,2).toUpperCase());
+  } else {
+    vsBot=true;curBot=BOTS[selBot];
+    let hc=pColor==='r'?(Math.random()<.5?'w':'b'):pColor;
+    botClr=hc==='w'?'b':'w';
+    const humans=[
+      {name:"Charlie Coyle",   num:"#3",  init:"CC"},
+      {name:"Boone Jenner",    num:"#38", init:"BJ"},
+      {name:"Kent Johnson",    num:"#91", init:"KJ"},
+      {name:"Adam Fantilli",   num:"#19", init:"AF"},
+    ];
+    const h=humans[Math.floor(Math.random()*humans.length)];
+    if(hc==='w'){setPL('w',h.name,h.num,h.init);setPL('b',curBot.name,curBot.num,curBot.init);}
+    else{setPL('w',curBot.name,curBot.num,curBot.init);setPL('b',h.name,h.num,h.init);}
+  }
+  document.getElementById('setup-modal').style.display='none';
+  gameOn=true;renderBoard();updateStatus();startTimer();
+  if(vsBot&&botClr==='w')setTimeout(doBotMove,600);
+}
+function setPL(s,name,num,init){
+  document.getElementById(s[0]+'-name').textContent=name;
+  document.getElementById(s[0]+'-num').textContent=num;
+  document.getElementById(s[0]+'-av').textContent=init;
+}
+
+// ════════════════════════════════════════
 // FEN PARSER
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════
 function fenToBoard(fen){
   const rows=fen.split('/');const b=[];
   const pm={k:'K',q:'Q',r:'R',b:'B',n:'N',p:'P'};
@@ -399,240 +767,519 @@ function fenToBoard(fen){
   return b;
 }
 
-// ════════════════════════════════════════════════
-// 100 PUZZLES
-// ════════════════════════════════════════════════
-const PUZZLES=[
-  {theme:"Mate in 1",desc:"White to move — deliver checkmate!",hint:"Queen swoops to f7 — scholar's mate!",sol:"Qf7# — Scholar's Mate",turn:"w",fen:"r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR",ep:null,move:[[1,5,1,4]]},
-  {theme:"Back Rank Mate",desc:"Exploit the back rank weakness.",hint:"Rook to d8.",sol:"Rd8# — back rank checkmate",turn:"w",fen:"6k1/5ppp/8/8/8/8/8/3R2K1",ep:null,move:[[7,3,0,3]]},
-  {theme:"Smothered Mate",desc:"Knight delivers smothered mate!",hint:"Knight hops to f7.",sol:"Nf7# — smothered mate",turn:"w",fen:"6rk/6pp/7N/8/8/8/8/6K1",ep:null,move:[[2,7,1,5]]},
-  {theme:"Mate in 1",desc:"Rook to a8 is checkmate.",hint:"Ra8#",sol:"Ra8#",turn:"w",fen:"k7/1R6/2K5/8/8/8/8/8",ep:null,move:[[1,1,0,0]]},
-  {theme:"Knight Fork",desc:"Fork the king and rook!",hint:"Find a square where the knight hits both.",sol:"Ne7+ forks king and rook",turn:"w",fen:"r3k3/8/8/3N4/8/8/8/4K3",ep:null,move:[[3,3,1,4]]},
-  {theme:"Mate in 1",desc:"Rook slides to f8 — checkmate!",hint:"Rf8#",sol:"Rf8#",turn:"w",fen:"5rk1/5ppp/8/8/8/8/8/5RK1",ep:null,move:[[7,5,0,5]]},
-  {theme:"Skewer",desc:"Attack the king, win what's behind it.",hint:"Check on f8 — skewer!",sol:"Rf8+ skewer wins the rook",turn:"w",fen:"4k3/4r3/8/8/8/8/8/4KR2",ep:null,move:[[7,5,0,5]]},
-  {theme:"Mate in 1",desc:"Queen to e8 is checkmate.",hint:"Qe8#",sol:"Qe8#",turn:"w",fen:"4k3/8/4K3/8/8/8/8/4Q3",ep:null,move:[[7,4,0,4]]},
-  {theme:"Ladder Mate",desc:"Two rooks march up the board.",hint:"Rc8#",sol:"Rc8# — ladder mate",turn:"w",fen:"k7/8/8/8/8/8/8/KRR5",ep:null,move:[[7,2,0,2]]},
-  {theme:"Bishop Fork",desc:"Bishop forks king and rook.",hint:"The bishop attacks diagonally.",sol:"Bg6+ forks king and rook",turn:"w",fen:"rn2k3/8/8/8/8/3B4/8/4K3",ep:null,move:[[5,3,2,6]]},
-  {theme:"Mate in 1",desc:"Queen to b7 is checkmate.",hint:"Qb7#",sol:"Qb7#",turn:"w",fen:"4k3/8/8/8/8/8/1Q6/4K3",ep:null,move:[[6,1,1,1]]},
-  {theme:"Promotion",desc:"Queen the pawn — it's checkmate!",hint:"a8=Q+",sol:"a8=Q# — promotion is mate",turn:"w",fen:"4k3/P3K3/8/8/8/8/8/8",ep:null,move:[[1,0,0,0]]},
-  {theme:"Mate in 1",desc:"Ra8 — king is cornered.",hint:"Ra8#",sol:"Ra8#",turn:"w",fen:"k7/8/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
-  {theme:"Mate in 1",desc:"Queen slides to g8.",hint:"Qg8#",sol:"Qg8#",turn:"w",fen:"6k1/Q7/8/8/8/8/8/6K1",ep:null,move:[[1,0,0,6]]},
-  {theme:"Pawn Fork",desc:"Pawn fork wins two pieces.",hint:"Push to e5 — it forks both!",sol:"e5 forks bishop and knight",turn:"w",fen:"4k3/8/8/2n1b3/3P4/8/8/4K3",ep:null,move:[[4,3,3,3]]},
-  {theme:"Mate in 1",desc:"Rd8 is checkmate.",hint:"Rd8#",sol:"Rd8#",turn:"w",fen:"3k4/3R4/3K4/8/8/8/8/8",ep:null,move:[[1,3,0,3]]},
-  {theme:"Win the Knight",desc:"The knight on b5 is lost.",hint:"Attack it with your rook.",sol:"Rd7 wins the knight",turn:"w",fen:"4k3/8/8/1n6/8/8/3R4/4K3",ep:null,move:[[6,3,1,3]]},
-  {theme:"Mate in 1",desc:"Rb8 — king trapped by king on c6.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k1K5/8/1R6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
-  {theme:"Mate in 2",desc:"Queen check then rook mate.",hint:"Qd8+ first, then Rf7#",sol:"Qd8+ Ke7, Rf7#",turn:"w",fen:"4k3/8/8/8/8/8/8/R2QK3",ep:null,move:[[7,3,0,3],[7,0,1,5]]},
-  {theme:"Pin",desc:"Pin the knight to the king.",hint:"Bishop to f6.",sol:"Bf6 — pins knight on e7",turn:"w",fen:"4k3/4n3/8/8/8/8/8/B3K3",ep:null,move:[[7,0,2,5]]},
-  {theme:"Mate in 1",desc:"Ra7 — checkmate!",hint:"Ra7#",sol:"Ra7#",turn:"w",fen:"4k3/8/4K3/8/8/8/8/R7",ep:null,move:[[7,0,1,0]]},
-  {theme:"Discovered Check",desc:"Move the knight to reveal a rook check.",hint:"Ne5 discovers check.",sol:"Ne5 — discovered check",turn:"w",fen:"4k3/8/8/8/8/3N4/8/3RK3",ep:null,move:[[5,3,3,4]]},
-  {theme:"Mate in 1",desc:"Qh8 — king trapped by own pawns.",hint:"Qh8#",sol:"Qh8#",turn:"w",fen:"7k/7p/8/8/8/7B/8/6QK",ep:null,move:[[7,6,0,7]]},
-  {theme:"Mate in 1",desc:"Re8 — the rook mates.",hint:"Re8#",sol:"Re8#",turn:"w",fen:"4k3/8/4K3/4R3/8/8/8/8",ep:null,move:[[3,4,0,4]]},
-  {theme:"En Passant",desc:"The en passant capture wins a pawn!",hint:"Take en passant on d6.",sol:"exd6 e.p.",turn:"w",fen:"4k3/8/8/3pP3/8/8/8/4K3",ep:[2,3],move:[[3,4,2,3]]},
-  {theme:"Mate in 1",desc:"Rh8 ends the game.",hint:"Rh8#",sol:"Rh8#",turn:"w",fen:"7k/R7/7K/8/8/8/8/8",ep:null,move:[[1,0,0,0]]},
-  {theme:"Mate in 1",desc:"Qg7 — checkmate!",hint:"Qg7#",sol:"Qg7#",turn:"w",fen:"6k1/6Qp/8/8/8/8/8/6K1",ep:null,move:[[1,6,0,6]]},
-  {theme:"Mate in 1",desc:"Rook to e8 ends it.",hint:"Re8#",sol:"Re8#",turn:"w",fen:"5rk1/4Rppp/8/8/8/8/8/6K1",ep:null,move:[[1,4,0,6]]},
-  {theme:"Mate in 1",desc:"Rb8 with king support.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k7/pp6/K7/1R6/8/8/8/8",ep:null,move:[[3,1,0,1]]},
-  {theme:"Trapping",desc:"The bishop is trapped — win it.",hint:"Push c6 to trap the bishop.",sol:"c6 — bishop is trapped",turn:"w",fen:"4k3/8/1b6/2P5/8/8/8/4K3",ep:null,move:[[3,2,2,2]]},
-  {theme:"Mate in 1",desc:"Queen to a3 is checkmate.",hint:"Qa3#",sol:"Qa3#",turn:"w",fen:"8/8/8/8/8/1k6/8/QK6",ep:null,move:[[7,0,5,0]]},
-  {theme:"Fork",desc:"Knight forks king and queen.",hint:"Ne5+ hits both!",sol:"Ne5+ forks king and queen",turn:"w",fen:"3k4/3q4/8/8/8/5N2/8/5K2",ep:null,move:[[5,5,3,4]]},
-  {theme:"Mate in 1",desc:"Queen to b8 is mate.",hint:"Qb8#",sol:"Qb8#",turn:"w",fen:"k7/1p6/1K6/8/8/8/8/7Q",ep:null,move:[[7,7,0,1]]},
-  {theme:"Mate in 1",desc:"Rd8 — king has nowhere to go.",hint:"Rd8#",sol:"Rd8#",turn:"w",fen:"2k5/8/2K5/3R4/8/8/8/8",ep:null,move:[[3,3,0,3]]},
-  {theme:"Mate in 1",desc:"Two rooks deliver mate.",hint:"Ra8#",sol:"Ra8#",turn:"w",fen:"6k1/R6R/8/8/8/8/8/6K1",ep:null,move:[[1,0,0,0]]},
-  {theme:"Pawn Break",desc:"The pawn breaks through to promote.",hint:"b5 breaks the chain!",sol:"b5 — one pawn queens",turn:"w",fen:"8/8/8/ppp5/PPP5/8/8/4K1k1",ep:null,move:[[4,1,3,2]]},
-  {theme:"Mate in 1",desc:"Qe8 — king blocked by pawns.",hint:"Qe8#",sol:"Qe8#",turn:"w",fen:"4k3/4p3/3pKp2/8/8/8/8/4Q3",ep:null,move:[[7,4,0,4]]},
-  {theme:"Mate in 1",desc:"Rb8 with king on a6.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k7/p7/1p6/8/8/8/8/2KR4",ep:null,move:[[7,3,0,1]]},
-  {theme:"Removing Defender",desc:"Remove the key defender.",hint:"Bishop takes on f7.",sol:"Bxf7+ removes key defender",turn:"w",fen:"r1bqk2r/ppp2ppp/2n2n2/3pp3/1bBPP3/2N2N2/PPP2PPP/R1BQK2R",ep:null,move:[[2,2,1,5]]},
-  {theme:"Mate in 1",desc:"Rook to g8 — checkmate!",hint:"Rg8#",sol:"Rg8#",turn:"w",fen:"r5k1/8/6K1/8/8/8/8/7R",ep:null,move:[[7,7,0,6]]},
-  {theme:"Smothered",desc:"Knight smothers the king.",hint:"Ng7# — king smothered!",sol:"Ng7#",turn:"w",fen:"6rk/6pp/8/6N1/8/8/8/6K1",ep:null,move:[[3,6,0,6]]},
-  {theme:"Pawn Endgame",desc:"Advance — the pawn can't be stopped.",hint:"e5 gains key squares.",sol:"e5 — winning pawn endgame",turn:"w",fen:"8/8/8/4k3/4P3/4K3/8/8",ep:null,move:[[4,4,3,4]]},
-  {theme:"Mate in 1",desc:"Queen + bishop battery — Qg8#",hint:"Qg8#",sol:"Qg8#",turn:"w",fen:"6k1/6pp/8/8/8/7B/8/6QK",ep:null,move:[[7,6,0,6]]},
-  {theme:"Mate in 1",desc:"Ra8 — final move!",hint:"Ra8#",sol:"Ra8#",turn:"w",fen:"2k5/R7/2K5/8/8/8/8/8",ep:null,move:[[1,0,0,0]]},
-  {theme:"Back Rank",desc:"Queen fires on the back rank.",hint:"Rd8# ends it.",sol:"Rd8#",turn:"w",fen:"3rk3/3R4/8/8/8/8/8/3Q1K2",ep:null,move:[[1,3,0,3]]},
-  {theme:"Queen Fork",desc:"Queen forks king and rook.",hint:"Qa8+ hits both.",sol:"Qa8+ forks king and rook",turn:"w",fen:"r3k3/8/8/8/8/8/8/Q3K3",ep:null,move:[[7,0,0,0]]},
-  {theme:"Mate in 1",desc:"Rc8 — ladder mate!",hint:"Rc8#",sol:"Rc8#",turn:"w",fen:"k7/2R5/1K6/8/8/8/8/8",ep:null,move:[[1,2,0,2]]},
-  {theme:"Mate in 1",desc:"Qh7 — checkmate!",hint:"Qh7#",sol:"Qh7#",turn:"w",fen:"6k1/7p/8/8/8/8/8/4Q1K1",ep:null,move:[[7,4,1,7]]},
-  {theme:"Win Bishop",desc:"The bishop on b5 is lost.",hint:"Rook attacks the bishop.",sol:"Rb7 wins the bishop",turn:"w",fen:"4k3/8/8/1b6/8/8/3R4/4K3",ep:null,move:[[6,3,1,1]]},
-  {theme:"Mate in 1",desc:"Re8 — checkmate!",hint:"Re8#",sol:"Re8#",turn:"w",fen:"4k3/3R4/4K3/8/8/8/8/8",ep:null,move:[[1,3,0,3]]},
-  {theme:"Mate in 1",desc:"Qg7 — king can't escape.",hint:"Qg7#",sol:"Qg7#",turn:"w",fen:"6k1/7p/6K1/8/8/8/8/6Q1",ep:null,move:[[7,6,1,6]]},
-  {theme:"Back Rank Combo",desc:"Rook check leads to back rank mate.",hint:"Re8+ then Rxe8#",sol:"Re8+ Rxe8, Rxe8#",turn:"w",fen:"r5k1/5ppp/8/8/8/8/8/4R1K1",ep:null,move:[[7,4,0,4]]},
-  {theme:"Mate in 1",desc:"Rb8 — the king is trapped.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k7/1R6/8/1K6/8/8/8/8",ep:null,move:[[1,1,0,1]]},
-  {theme:"Mate in 1",desc:"Nf6 — checkmate!",hint:"Nf6# in the corner.",sol:"Nf6#",turn:"w",fen:"6k1/5ppp/8/5N2/8/8/8/6K1",ep:null,move:[[3,5,1,5]]},
-  {theme:"Mate in 1",desc:"Qf8 — checkmate!",hint:"Qf8#",sol:"Qf8#",turn:"w",fen:"5k2/5ppp/8/8/8/8/8/4QK2",ep:null,move:[[7,4,0,5]]},
-  {theme:"Knight Fork",desc:"Nd5+ forks king and rook.",hint:"Nd5+",sol:"Nd5+ forks king and rook",turn:"w",fen:"4k3/8/8/r7/8/2N5/8/4K3",ep:null,move:[[5,2,3,3]]},
-  {theme:"Mate in 1",desc:"Ra8 — game over.",hint:"Ra8#",sol:"Ra8#",turn:"w",fen:"k1K5/1p6/8/8/8/8/8/R7",ep:null,move:[[7,0,0,0]]},
-  {theme:"Mate in 1",desc:"Qg8 — king blocked by pawns.",hint:"Qg8#",sol:"Qg8#",turn:"w",fen:"6k1/5ppp/8/8/8/8/8/4Q1K1",ep:null,move:[[7,4,0,6]]},
-  {theme:"Discovered Attack",desc:"Move the knight to reveal a winning rook attack.",hint:"Nd5 discovers the rook.",sol:"Nd5 — discovered attack",turn:"w",fen:"4k3/8/8/r7/8/3N4/8/3RK3",ep:null,move:[[5,3,3,4]]},
-  {theme:"Mate in 1",desc:"Rd8 — king is cornered.",hint:"Rd8#",sol:"Rd8#",turn:"w",fen:"2k5/ppp5/8/8/8/8/8/2KR4",ep:null,move:[[7,3,0,3]]},
-  {theme:"Mate in 1",desc:"Rf8 — back rank checkmate!",hint:"Rf8#",sol:"Rf8#",turn:"w",fen:"6k1/5Rpp/8/8/8/8/8/6K1",ep:null,move:[[1,5,0,5]]},
-  {theme:"Zugzwang",desc:"Any Black move loses material.",hint:"Take the opposition with Kd4.",sol:"Kd4 — zugzwang, Black must give ground",turn:"w",fen:"8/8/8/3k4/3P4/3K4/8/8",ep:null,move:[[5,3,4,3]]},
-  {theme:"Mate in 1",desc:"Qa8 — checkmate!",hint:"Qa8#",sol:"Qa8#",turn:"w",fen:"k7/p7/K7/8/8/8/8/7Q",ep:null,move:[[7,7,0,0]]},
-  {theme:"Mate in 1",desc:"Rd3 — checkmate!",hint:"Rd3#",sol:"Rd3#",turn:"w",fen:"8/8/8/8/8/2k5/8/1K1R4",ep:null,move:[[7,3,5,3]]},
-  {theme:"Mate in 1",desc:"Qd8 — queen delivers the blow.",hint:"Qd8#",sol:"Qd8#",turn:"w",fen:"3rk3/8/8/8/8/8/8/3Q1RK1",ep:null,move:[[7,3,0,3]]},
-  {theme:"Mate in 1",desc:"Ra8 with king support.",hint:"Ra8#",sol:"Ra8#",turn:"w",fen:"k7/8/2K5/8/8/8/8/R7",ep:null,move:[[7,0,0,0]]},
-  {theme:"Smothered Mate",desc:"Nf7 — smothered mate!",hint:"The knight jumps to f7.",sol:"Nf7#",turn:"w",fen:"5rrk/6pp/7N/8/8/8/8/7K",ep:null,move:[[2,7,1,5]]},
-  {theme:"Mate in 1",desc:"Qg8 — checkmate!",hint:"Qg8#",sol:"Qg8#",turn:"w",fen:"6k1/5pQp/8/8/8/8/8/6K1",ep:null,move:[[1,6,0,6]]},
-  {theme:"Mate in 1",desc:"Re8 — rook mates on the back rank.",hint:"Re8#",sol:"Re8#",turn:"w",fen:"4k3/8/4K3/8/8/8/8/4R3",ep:null,move:[[7,4,0,4]]},
-  {theme:"Mate in 1",desc:"Rb8 — quiet but deadly.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k7/p7/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
-  {theme:"Mate in 1",desc:"Rook checks — king is out of room.",hint:"Re8# or Rh8#",sol:"Re8# — back rank checkmate",turn:"w",fen:"r5k1/6pp/8/8/8/8/6PP/4R1K1",ep:null,move:[[7,4,0,4]]},
-  {theme:"Mate in 1",desc:"Qe8 — king blocked.",hint:"Qe8#",sol:"Qe8#",turn:"w",fen:"4k3/4p3/4K3/8/8/8/8/4Q3",ep:null,move:[[7,4,0,4]]},
-  {theme:"Mate in 1",desc:"Rc8 — the rook closes in.",hint:"Rc8#",sol:"Rc8#",turn:"w",fen:"k7/1p6/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,2]]},
-  {theme:"Mate in 1",desc:"Qg8 — game over!",hint:"Qg8#",sol:"Qg8#",turn:"w",fen:"6k1/5ppp/8/8/8/8/8/4Q1K1",ep:null,move:[[7,4,0,6]]},
-  {theme:"Pawn Ending",desc:"Push the pawn — it can't be stopped.",hint:"e5 is the key move.",sol:"e5 — winning endgame",turn:"w",fen:"8/8/8/4k3/4P3/4K3/8/8",ep:null,move:[[4,4,3,4]]},
-  {theme:"Mate in 1",desc:"Ra8 — the curtain falls.",hint:"Ra8#",sol:"Ra8#",turn:"w",fen:"k7/8/2K5/8/8/8/8/7R",ep:null,move:[[7,7,0,0]]},
-  {theme:"Mate in 1",desc:"Queen mate on h8!",hint:"Qh8#",sol:"Qh8#",turn:"w",fen:"7k/6pp/7K/8/8/8/8/7Q",ep:null,move:[[7,7,0,7]]},
-  {theme:"Back Rank",desc:"Rd8 — back rank weakness.",hint:"Rd8#",sol:"Rd8#",turn:"w",fen:"3rk3/3R4/8/8/8/8/8/3Q1K2",ep:null,move:[[1,3,0,3]]},
-  {theme:"Mate in 1",desc:"Rb8 — king is trapped.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k7/p7/K7/1R6/8/8/8/8",ep:null,move:[[3,1,0,1]]},
-  {theme:"Mate in 1",desc:"Rook fires on the back rank.",hint:"Rd8# wins immediately.",sol:"Rd8#",turn:"w",fen:"2k5/ppp5/8/8/8/8/8/3RK3",ep:null,move:[[7,3,0,3]]},
-  {theme:"Mate in 1",desc:"Knight delivers the final blow.",hint:"Nf7# — smothered!",sol:"Nf7#",turn:"w",fen:"6rk/6pp/8/8/7N/8/8/6K1",ep:null,move:[[4,7,1,5]]},
-  {theme:"Mate in 1",desc:"Queen strikes on g8.",hint:"Qg8#",sol:"Qg8#",turn:"w",fen:"6k1/5ppp/8/8/8/8/8/3Q1K2",ep:null,move:[[7,3,0,6]]},
-  {theme:"Mate in 1",desc:"Rb8 — checkmate!",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k1K5/8/2R5/8/8/8/8/8",ep:null,move:[[2,2,0,1]]},
-  {theme:"Mate in 1",desc:"Re8 — the king is lost.",hint:"Re8#",sol:"Re8#",turn:"w",fen:"4k3/4p3/3RK3/8/8/8/8/8",ep:null,move:[[2,3,0,3]]},
-  {theme:"Mate in 1",desc:"Qe8 — game, set, match.",hint:"Qe8#",sol:"Qe8#",turn:"w",fen:"4k3/8/4K3/8/8/8/8/6Q1",ep:null,move:[[7,6,0,4]]},
-  {theme:"Mate in 1",desc:"Rook to a8 closes the curtain.",hint:"Ra8#",sol:"Ra8#",turn:"w",fen:"k7/pp6/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
-  {theme:"Mate in 1",desc:"Queen hits h8 — checkmate!",hint:"Qh8#",sol:"Qh8#",turn:"w",fen:"7k/5ppp/8/8/8/8/8/5QK1",ep:null,move:[[7,5,0,7]]},
-  {theme:"Rook Mate",desc:"Rook to d8 — king caught!",hint:"Rd8#",sol:"Rd8#",turn:"w",fen:"3k4/3R4/2K5/8/8/8/8/8",ep:null,move:[[1,3,0,3]]},
-  {theme:"Mate in 1",desc:"Rb8 — the long-awaited mate.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k7/8/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
-  {theme:"Mate in 1",desc:"Qf8 — checkmate!",hint:"Qf8#",sol:"Qf8#",turn:"w",fen:"5k2/4Rppp/8/8/8/8/8/5QK1",ep:null,move:[[7,5,0,5]]},
-  {theme:"Mate in 1",desc:"Queen to g7 — checkmate!",hint:"Qg7#",sol:"Qg7#",turn:"w",fen:"6k1/8/6K1/8/8/8/8/6Q1",ep:null,move:[[7,6,1,6]]},
-  {theme:"Mate in 1",desc:"Rook to e8 — back rank!",hint:"Re8#",sol:"Re8#",turn:"w",fen:"4k3/4R3/5K2/8/8/8/8/8",ep:null,move:[[1,4,0,4]]},
-  {theme:"Mate in 1",desc:"Queen fires on f7!",hint:"Qf7#",sol:"Qf7#",turn:"w",fen:"5k2/5K2/8/8/8/8/8/6Q1",ep:null,move:[[7,6,1,5]]},
-  {theme:"Mate in 1",desc:"Rc8 — the rook drops in!",hint:"Rc8#",sol:"Rc8#",turn:"w",fen:"k7/pp6/2K5/8/8/8/8/2R5",ep:null,move:[[7,2,0,2]]},
-  {theme:"Mate in 1",desc:"Rd8 — game over!",hint:"Rd8#",sol:"Rd8#",turn:"w",fen:"2k5/8/2K5/8/8/8/8/3R4",ep:null,move:[[7,3,0,3]]},
-  {theme:"Mate in 1",desc:"Rook to a8 — the final shot.",hint:"Ra8#",sol:"Ra8#",turn:"w",fen:"k7/p7/K7/8/8/8/8/R7",ep:null,move:[[7,0,0,0]]},
-];
-
-// ════════════════════════════════════════════════
-// BOT ROSTER
-// ════════════════════════════════════════════════
-const BOTS=[
-  {name:"Brendan Gaunce",num:"#15",init:"BG",skill:"Scratchy",depth:1,err:.80,pips:1,pc:"#e44"},
-  {name:"Liam Foudy",num:"#19",init:"LF",skill:"Scratchy",depth:1,err:.70,pips:1,pc:"#e44"},
-  {name:"Eric Robinson",num:"#50",init:"ER",skill:"AHL Callup",depth:1,err:.50,pips:2,pc:"#e84"},
-  {name:"James Malatesta",num:"#24",init:"JM",skill:"AHL Callup",depth:1,err:.38,pips:2,pc:"#e84"},
-  {name:"Cole Sillinger",num:"#4",init:"CS",skill:"Roster Guy",depth:2,err:.30,pips:3,pc:"#cc3"},
-  {name:"Kirill Marchenko",num:"#86",init:"KM",skill:"Roster Guy",depth:2,err:.22,pips:3,pc:"#cc3"},
-  {name:"Sean Monahan",num:"#23",init:"SM",skill:"Top-6 Fwd",depth:2,err:.12,pips:4,pc:"#8c8"},
-  {name:"Kent Johnson",num:"#91",init:"KJ",skill:"Top-6 Fwd",depth:2,err:.07,pips:4,pc:"#8c8"},
-  {name:"Adam Fantilli",num:"#11",init:"AF",skill:"Star",depth:3,err:.03,pips:5,pc:"#4af"},
-  {name:"Zach Werenski",num:"#8",init:"ZW",skill:"Star",depth:3,err:.01,pips:5,pc:"#4af"},
-  {name:"Patrik Laine",num:"#29",init:"PL",skill:"Elite",depth:3,err:.00,pips:6,pc:"#f80"},
-  {name:"Boone Jenner",num:"#38",init:"BJ",skill:"Captain",depth:4,err:.00,pips:6,pc:"#f80"},
-];
-
-const TIME_PRESETS=[{n:"Bullet",t:1,d:"1 min"},{n:"Blitz",t:3,d:"3 min"},{n:"Blitz",t:5,d:"5 min"},{n:"Rapid",t:10,d:"10 min"},{n:"Rapid",t:15,d:"15 min"},{n:"Classic",t:30,d:"30 min"}];
-
-// Setup UI
-let gMode='1v1',selBot=null,pColor='w',selTime=3;
-let vsBot=false,botClr='b',curBot=null;
-function setMode(m){gMode=m;document.getElementById('m-1v1').classList.toggle('active',m==='1v1');document.getElementById('m-bot').classList.toggle('active',m==='bot');document.getElementById('bot-sec').style.display=m==='bot'?'block':'none';document.getElementById('ovo-sec').style.display=m==='bot'?'none':'block';document.getElementById('start-btn').disabled=m==='bot'&&selBot===null;}
-function setColor(c){pColor=c;['cw','cb','cr'].forEach(id=>document.getElementById(id).classList.remove('sel'));document.getElementById(c==='w'?'cw':c==='b'?'cb':'cr').classList.add('sel');}
-(function(){const g=document.getElementById('bot-grid');BOTS.forEach((b,i)=>{const btn=document.createElement('button');btn.className='bot-btn';const pips=Array.from({length:6},(_,pi)=>`<span class="pip" style="background:${pi<b.pips?b.pc:'#1a3055'}"></span>`).join('');btn.innerHTML=`<div class="bav">${b.init}</div><div><div class="bname">${b.name}</div><div class="bnum">${b.num} · ${b.skill}</div><div class="bpips">${pips}</div></div>`;btn.onclick=()=>{document.querySelectorAll('.bot-btn').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel');selBot=i;document.getElementById('start-btn').disabled=false;};g.appendChild(btn);});})();
-(function(){const g=document.getElementById('time-grid');TIME_PRESETS.forEach((p,i)=>{const btn=document.createElement('button');btn.className='t-btn'+(i===selTime?' sel':'');btn.innerHTML=`<span class="tbn">${p.n}</span><span class="tbd">${p.d}</span>`;btn.onclick=()=>{document.querySelectorAll('.t-btn').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel');selTime=i;document.getElementById('cust-time').value=p.t;};g.appendChild(btn);});})();
-document.getElementById('cust-time').value=TIME_PRESETS[selTime].t;
-function buildCoords(fEl,rEl){fEl.innerHTML='';rEl.innerHTML='';['a','b','c','d','e','f','g','h'].forEach(f=>{const d=document.createElement('div');d.className='b-file';d.textContent=f;fEl.appendChild(d);});for(let r=0;r<8;r++){const d=document.createElement('div');d.className='b-rank';d.textContent=8-r;rEl.appendChild(d);}}
-buildCoords(document.getElementById('b-files'),document.getElementById('b-ranks'));
-
-let pzInited=false;
-function showView(v){
-  // Close setup modal if going to puzzles
-  if(v==='pz') document.getElementById('setup-modal').style.display='none';
-  document.getElementById('v-play').classList.toggle('on',v==='play');
-  document.getElementById('v-pz').classList.toggle('on',v==='pz');
-  document.getElementById('tab-play').classList.toggle('active',v==='play');
-  document.getElementById('tab-pz').classList.toggle('active',v==='pz');
-  if(v==='pz'&&!pzInited){pzInited=true;buildCoords(document.getElementById('pz-files'),document.getElementById('pz-ranks'));initPuzzles();}
-}
-
-function startGame(){
-  const mins=Math.max(1,parseInt(document.getElementById('cust-time').value)||10);
-  wTime=mins*60;bTime=mins*60;updateTimers();
-  if(gMode==='1v1'){vsBot=false;const p1=document.getElementById('p1').value.trim()||'White';const p2=document.getElementById('p2').value.trim()||'Black';setPL('w',p1,'',p1.slice(0,2).toUpperCase());setPL('b',p2,'',p2.slice(0,2).toUpperCase());}
-  else{vsBot=true;curBot=BOTS[selBot];let hc=pColor==='r'?(Math.random()<.5?'w':'b'):pColor;botClr=hc==='w'?'b':'w';const hp=[{name:"Johnny Gaudreau",num:"#13",init:"JG"},{name:"Adam Fantilli",num:"#11",init:"AF"},{name:"Zach Werenski",num:"#8",init:"ZW"}];const h=hp[Math.floor(Math.random()*hp.length)];if(hc==='w'){setPL('w',h.name,h.num,h.init);setPL('b',curBot.name,curBot.num,curBot.init);}else{setPL('w',curBot.name,curBot.num,curBot.init);setPL('b',h.name,h.num,h.init);}}
-  document.getElementById('setup-modal').style.display='none';gameOn=true;renderBoard();updateStatus();startTimer();
-  if(vsBot&&botClr==='w')setTimeout(doBotMove,500);
-}
-function setPL(s,name,num,init){document.getElementById(s[0]+'-name').textContent=name;document.getElementById(s[0]+'-num').textContent=num;document.getElementById(s[0]+'-av').textContent=init;}
-
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════
 // CHESS ENGINE
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════
 const PV={K:10000,Q:900,R:500,B:330,N:320,P:100};
-const PST={P:[[0,0,0,0,0,0,0,0],[50,50,50,50,50,50,50,50],[10,10,20,30,30,20,10,10],[5,5,10,25,25,10,5,5],[0,0,0,20,20,0,0,0],[5,-5,-10,0,0,-10,-5,5],[5,10,10,-20,-20,10,10,5],[0,0,0,0,0,0,0,0]],N:[[-50,-40,-30,-30,-30,-30,-40,-50],[-40,-20,0,0,0,0,-20,-40],[-30,0,10,15,15,10,0,-30],[-30,5,15,20,20,15,5,-30],[-30,0,15,20,20,15,0,-30],[-30,5,10,15,15,10,5,-30],[-40,-20,0,5,5,0,-20,-40],[-50,-40,-30,-30,-30,-30,-40,-50]],B:[[-20,-10,-10,-10,-10,-10,-10,-20],[-10,0,0,0,0,0,0,-10],[-10,0,5,10,10,5,0,-10],[-10,5,5,10,10,5,5,-10],[-10,0,10,10,10,10,0,-10],[-10,10,10,10,10,10,10,-10],[-10,5,0,0,0,0,5,-10],[-20,-10,-10,-10,-10,-10,-10,-20]],R:[[0,0,0,0,0,0,0,0],[5,10,10,10,10,10,10,5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[0,0,0,5,5,0,0,0]],Q:[[-20,-10,-10,-5,-5,-10,-10,-20],[-10,0,0,0,0,0,0,-10],[-10,0,5,5,5,5,0,-10],[-5,0,5,5,5,5,0,-5],[0,0,5,5,5,5,0,-5],[-10,5,5,5,5,5,0,-10],[-10,0,5,0,0,0,0,-10],[-20,-10,-10,-5,-5,-10,-10,-20]],K:[[-30,-40,-40,-50,-50,-40,-40,-30],[-30,-40,-40,-50,-50,-40,-40,-30],[-30,-40,-40,-50,-50,-40,-40,-30],[-30,-40,-40,-50,-50,-40,-40,-30],[-20,-30,-30,-40,-40,-30,-30,-20],[-10,-20,-20,-20,-20,-20,-20,-10],[20,20,0,0,0,0,20,20],[20,30,10,0,0,10,30,20]]};
+const PST={
+  P:[[0,0,0,0,0,0,0,0],[50,50,50,50,50,50,50,50],[10,10,20,30,30,20,10,10],[5,5,10,25,25,10,5,5],[0,0,0,20,20,0,0,0],[5,-5,-10,0,0,-10,-5,5],[5,10,10,-20,-20,10,10,5],[0,0,0,0,0,0,0,0]],
+  N:[[-50,-40,-30,-30,-30,-30,-40,-50],[-40,-20,0,0,0,0,-20,-40],[-30,0,10,15,15,10,0,-30],[-30,5,15,20,20,15,5,-30],[-30,0,15,20,20,15,0,-30],[-30,5,10,15,15,10,5,-30],[-40,-20,0,5,5,0,-20,-40],[-50,-40,-30,-30,-30,-30,-40,-50]],
+  B:[[-20,-10,-10,-10,-10,-10,-10,-20],[-10,0,0,0,0,0,0,-10],[-10,0,5,10,10,5,0,-10],[-10,5,5,10,10,5,5,-10],[-10,0,10,10,10,10,0,-10],[-10,10,10,10,10,10,10,-10],[-10,5,0,0,0,0,5,-10],[-20,-10,-10,-10,-10,-10,-10,-20]],
+  R:[[0,0,0,0,0,0,0,0],[5,10,10,10,10,10,10,5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[0,0,0,5,5,0,0,0]],
+  Q:[[-20,-10,-10,-5,-5,-10,-10,-20],[-10,0,0,0,0,0,0,-10],[-10,0,5,5,5,5,0,-10],[-5,0,5,5,5,5,0,-5],[0,0,5,5,5,5,0,-5],[-10,5,5,5,5,5,0,-10],[-10,0,5,0,0,0,0,-10],[-20,-10,-10,-5,-5,-10,-10,-20]],
+  K:[[-30,-40,-40,-50,-50,-40,-40,-30],[-30,-40,-40,-50,-50,-40,-40,-30],[-30,-40,-40,-50,-50,-40,-40,-30],[-30,-40,-40,-50,-50,-40,-40,-30],[-20,-30,-30,-40,-40,-30,-30,-20],[-10,-20,-20,-20,-20,-20,-20,-10],[20,20,0,0,0,0,20,20],[20,30,10,0,0,10,30,20]]
+};
 function pst(p,r,c){const t=p[1],col=p[0];if(!PST[t])return 0;return PST[t][col==='w'?r:7-r][c];}
 function evalBoard(s){let sc=0;for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=s.board[r][c];if(!p)continue;const v=(PV[p[1]]||0)+pst(p,r,c);sc+=p[0]==='w'?v:-v;}return sc;}
-function minimax(s,d,a,b,mx){if(d===0)return evalBoard(s);if(isMate(s))return mx?-99999:99999;if(isStale(s))return 0;let best=mx?-Infinity:Infinity;for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=s.board[r][c];if(!p||(mx?p[0]!=='w':p[0]!=='b'))continue;for(const [tr,tc] of legalMoves(s,r,c)){const v=minimax(applyMv(s,r,c,tr,tc),d-1,a,b,!mx);if(mx){best=Math.max(best,v);a=Math.max(a,v);}else{best=Math.min(best,v);b=Math.min(b,v);}if(b<=a)return best;}}return best;}
+function minimax(s,d,a,b,mx){
+  if(d===0)return evalBoard(s);
+  if(isMate(s))return mx?-99999:99999;
+  if(isStale(s))return 0;
+  let best=mx?-Infinity:Infinity;
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const p=s.board[r][c];if(!p||(mx?p[0]!=='w':p[0]!=='b'))continue;
+    for(const [tr,tc] of legalMoves(s,r,c)){
+      const v=minimax(applyMv(s,r,c,tr,tc),d-1,a,b,!mx);
+      if(mx){best=Math.max(best,v);a=Math.max(a,v);}else{best=Math.min(best,v);b=Math.min(b,v);}
+      if(b<=a)return best;
+    }
+  }
+  return best;
+}
 function allMoves(s,col){const m=[];for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=s.board[r][c];if(p&&p[0]===col)for(const [tr,tc] of legalMoves(s,r,c))m.push({fr:r,fc:c,tr,tc});}return m;}
-function getBest(s,bot){const all=allMoves(s,botClr);if(!all.length)return null;if(Math.random()<bot.err)return all[Math.floor(Math.random()*all.length)];const mx=botClr==='w';let best=null,bv=mx?-Infinity:Infinity;all.sort((a,b2)=>(s.board[b2.tr][b2.tc]?1:0)-(s.board[a.tr][a.tc]?1:0));for(const m of all){const v=minimax(applyMv(s,m.fr,m.fc,m.tr,m.tc),bot.depth-1,-Infinity,Infinity,!mx);if(mx?v>bv:v<bv){bv=v;best=m;}}return best;}
+function getBest(s,bot){
+  const all=allMoves(s,botClr);if(!all.length)return null;
+  if(Math.random()<bot.err)return all[Math.floor(Math.random()*all.length)];
+  const mx=botClr==='w';let best=null,bv=mx?-Infinity:Infinity;
+  all.sort((a,b2)=>(s.board[b2.tr][b2.tc]?1:0)-(s.board[a.tr][a.tc]?1:0));
+  for(const m of all){const v=minimax(applyMv(s,m.fr,m.fc,m.tr,m.tc),bot.depth-1,-Infinity,Infinity,!mx);if(mx?v>bv:v<bv){bv=v;best=m;}}
+  return best;
+}
+
+// Board logic
 const GL={wK:'♔',wQ:'♕',wR:'♖',wB:'♗',wN:'♘',wP:'♙',bK:'♚',bQ:'♛',bR:'♜',bB:'♝',bN:'♞',bP:'♟'};
 const FS=['a','b','c','d','e','f','g','h'];
 function initBd(){const b=Array(8).fill(null).map(()=>Array(8).fill(null));b[7]=['wR','wN','wB','wQ','wK','wB','wN','wR'];b[6]=Array(8).fill('wP');b[1]=Array(8).fill('bP');b[0]=['bR','bN','bB','bQ','bK','bB','bN','bR'];return b;}
 function newState(){return{board:initBd(),turn:'w',castling:{wK:true,wQ:true,bK:true,bQ:true},ep:null,hm:0,fm:1};}
-function attacked(s,r,c,att){const pd=att==='w'?-1:1;for(const dc of[-1,1]){const pr=r+pd,pc=c+dc;if(pr>=0&&pr<8&&pc>=0&&pc<8&&s.board[pr][pc]===att+'P')return true;}for(const [dr,dc] of[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<8&&nc>=0&&nc<8&&s.board[nr][nc]===att+'N')return true;}for(const [dr,dc] of[[-1,-1],[-1,1],[1,-1],[1,1]]){for(let i=1;i<8;i++){const nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=8||nc<0||nc>=8)break;const p=s.board[nr][nc];if(p){if(p===att+'B'||p===att+'Q')return true;break;}}}for(const [dr,dc] of[[0,-1],[0,1],[-1,0],[1,0]]){for(let i=1;i<8;i++){const nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=8||nc<0||nc>=8)break;const p=s.board[nr][nc];if(p){if(p===att+'R'||p===att+'Q')return true;break;}}}for(const dr of[-1,0,1])for(const dc of[-1,0,1]){if(!dr&&!dc)continue;const nr=r+dr,nc=c+dc;if(nr>=0&&nr<8&&nc>=0&&nc<8&&s.board[nr][nc]===att+'K')return true;}return false;}
+function attacked(s,r,c,att){
+  const pd=att==='w'?-1:1;
+  for(const dc of[-1,1]){const pr=r+pd,pc=c+dc;if(pr>=0&&pr<8&&pc>=0&&pc<8&&s.board[pr][pc]===att+'P')return true;}
+  for(const [dr,dc] of[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<8&&nc>=0&&nc<8&&s.board[nr][nc]===att+'N')return true;}
+  for(const [dr,dc] of[[-1,-1],[-1,1],[1,-1],[1,1]]){for(let i=1;i<8;i++){const nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=8||nc<0||nc>=8)break;const p=s.board[nr][nc];if(p){if(p===att+'B'||p===att+'Q')return true;break;}}}
+  for(const [dr,dc] of[[0,-1],[0,1],[-1,0],[1,0]]){for(let i=1;i<8;i++){const nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=8||nc<0||nc>=8)break;const p=s.board[nr][nc];if(p){if(p===att+'R'||p===att+'Q')return true;break;}}}
+  for(const dr of[-1,0,1])for(const dc of[-1,0,1]){if(!dr&&!dc)continue;const nr=r+dr,nc=c+dc;if(nr>=0&&nr<8&&nc>=0&&nc<8&&s.board[nr][nc]===att+'K')return true;}
+  return false;
+}
 function inCheck(s,col){const o=col==='w'?'b':'w';for(let r=0;r<8;r++)for(let c=0;c<8;c++)if(s.board[r][c]===col+'K')return attacked(s,r,c,o);return false;}
-function rawMoves(s,r,c){const piece=s.board[r][c];if(!piece)return[];const col=piece[0],type=piece[1],mv=[];if(type==='P'){const dir=col==='w'?-1:1,sr=col==='w'?6:1,fr=r+dir;if(fr>=0&&fr<8){if(!s.board[fr][c]){mv.push([fr,c]);if(r===sr&&!s.board[r+2*dir][c])mv.push([r+2*dir,c]);}for(const dc of[-1,1]){const nc=c+dc;if(nc>=0&&nc<8){const t=s.board[fr][nc];if(t&&t[0]!==col)mv.push([fr,nc]);if(s.ep&&s.ep[0]===fr&&s.ep[1]===nc)mv.push([fr,nc]);}}}}else if(type==='N'){for(const [dr,dc] of[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<8&&nc>=0&&nc<8){const t=s.board[nr][nc];if(!t||t[0]!==col)mv.push([nr,nc]);}}}else if(type==='B'||type==='R'||type==='Q'){const d=type==='B'?[[-1,-1],[-1,1],[1,-1],[1,1]]:type==='R'?[[0,-1],[0,1],[-1,0],[1,0]]:[[-1,-1],[-1,1],[1,-1],[1,1],[0,-1],[0,1],[-1,0],[1,0]];for(const [dr,dc] of d){for(let i=1;i<8;i++){const nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=8||nc<0||nc>=8)break;const t=s.board[nr][nc];if(!t)mv.push([nr,nc]);else{if(t[0]!==col)mv.push([nr,nc]);break;}}}}else if(type==='K'){for(const dr of[-1,0,1])for(const dc of[-1,0,1]){if(!dr&&!dc)continue;const nr=r+dr,nc=c+dc;if(nr>=0&&nr<8&&nc>=0&&nc<8){const t=s.board[nr][nc];if(!t||t[0]!==col)mv.push([nr,nc]);}}const o=col==='w'?'b':'w',cr=col==='w'?7:0,ck=col+'K',cq=col+'Q',crr=col+'R';if(r===cr&&c===4){if(s.castling[ck]&&!s.board[cr][5]&&!s.board[cr][6]&&s.board[cr][7]===crr&&!attacked(s,cr,4,o)&&!attacked(s,cr,5,o)&&!attacked(s,cr,6,o))mv.push([cr,6]);if(s.castling[cq]&&!s.board[cr][3]&&!s.board[cr][2]&&!s.board[cr][1]&&s.board[cr][0]===crr&&!attacked(s,cr,4,o)&&!attacked(s,cr,3,o)&&!attacked(s,cr,2,o))mv.push([cr,2]);}}return mv;}
-function applyMv(s,fr,fc,tr,tc,pr='Q'){const ns={board:s.board.map(r=>[...r]),turn:s.turn==='w'?'b':'w',castling:{...s.castling},ep:null,hm:s.hm+1,fm:s.turn==='b'?s.fm+1:s.fm};const piece=ns.board[fr][fc],col=piece[0],type=piece[1];ns.board[tr][tc]=piece;ns.board[fr][fc]=null;if(type==='P'&&(tr===0||tr===7))ns.board[tr][tc]=col+pr;if(type==='P'&&s.ep&&tr===s.ep[0]&&tc===s.ep[1])ns.board[col==='w'?tr+1:tr-1][tc]=null;if(type==='P'&&Math.abs(tr-fr)===2)ns.ep=[(fr+tr)/2,fc];if(type==='K'){if(col==='w'){ns.castling.wK=false;ns.castling.wQ=false;}else{ns.castling.bK=false;ns.castling.bQ=false;}if(fc===4&&tc===6){ns.board[fr][5]=ns.board[fr][7];ns.board[fr][7]=null;}else if(fc===4&&tc===2){ns.board[fr][3]=ns.board[fr][0];ns.board[fr][0]=null;}}if(piece==='wR'){if(fr===7&&fc===0)ns.castling.wQ=false;if(fr===7&&fc===7)ns.castling.wK=false;}if(piece==='bR'){if(fr===0&&fc===0)ns.castling.bQ=false;if(fr===0&&fc===7)ns.castling.bK=false;}return ns;}
+function rawMoves(s,r,c){
+  const piece=s.board[r][c];if(!piece)return[];const col=piece[0],type=piece[1],mv=[];
+  if(type==='P'){const dir=col==='w'?-1:1,sr=col==='w'?6:1,fr=r+dir;if(fr>=0&&fr<8){if(!s.board[fr][c]){mv.push([fr,c]);if(r===sr&&!s.board[r+2*dir][c])mv.push([r+2*dir,c]);}for(const dc of[-1,1]){const nc=c+dc;if(nc>=0&&nc<8){const t=s.board[fr][nc];if(t&&t[0]!==col)mv.push([fr,nc]);if(s.ep&&s.ep[0]===fr&&s.ep[1]===nc)mv.push([fr,nc]);}}}}
+  else if(type==='N'){for(const [dr,dc] of[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<8&&nc>=0&&nc<8){const t=s.board[nr][nc];if(!t||t[0]!==col)mv.push([nr,nc]);}}}
+  else if(type==='B'||type==='R'||type==='Q'){const dirs=type==='B'?[[-1,-1],[-1,1],[1,-1],[1,1]]:type==='R'?[[0,-1],[0,1],[-1,0],[1,0]]:[[-1,-1],[-1,1],[1,-1],[1,1],[0,-1],[0,1],[-1,0],[1,0]];for(const [dr,dc] of dirs){for(let i=1;i<8;i++){const nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=8||nc<0||nc>=8)break;const t=s.board[nr][nc];if(!t)mv.push([nr,nc]);else{if(t[0]!==col)mv.push([nr,nc]);break;}}}}
+  else if(type==='K'){for(const dr of[-1,0,1])for(const dc of[-1,0,1]){if(!dr&&!dc)continue;const nr=r+dr,nc=c+dc;if(nr>=0&&nr<8&&nc>=0&&nc<8){const t=s.board[nr][nc];if(!t||t[0]!==col)mv.push([nr,nc]);}}const o=col==='w'?'b':'w',cr=col==='w'?7:0,ck=col+'K',cq=col+'Q',crr=col+'R';if(r===cr&&c===4){if(s.castling[ck]&&!s.board[cr][5]&&!s.board[cr][6]&&s.board[cr][7]===crr&&!attacked(s,cr,4,o)&&!attacked(s,cr,5,o)&&!attacked(s,cr,6,o))mv.push([cr,6]);if(s.castling[cq]&&!s.board[cr][3]&&!s.board[cr][2]&&!s.board[cr][1]&&s.board[cr][0]===crr&&!attacked(s,cr,4,o)&&!attacked(s,cr,3,o)&&!attacked(s,cr,2,o))mv.push([cr,2]);}}
+  return mv;
+}
+function applyMv(s,fr,fc,tr,tc,pr='Q'){
+  const ns={board:s.board.map(r=>[...r]),turn:s.turn==='w'?'b':'w',castling:{...s.castling},ep:null,hm:s.hm+1,fm:s.turn==='b'?s.fm+1:s.fm};
+  const piece=ns.board[fr][fc],col=piece[0],type=piece[1];
+  ns.board[tr][tc]=piece;ns.board[fr][fc]=null;
+  if(type==='P'&&(tr===0||tr===7))ns.board[tr][tc]=col+pr;
+  if(type==='P'&&s.ep&&tr===s.ep[0]&&tc===s.ep[1])ns.board[col==='w'?tr+1:tr-1][tc]=null;
+  if(type==='P'&&Math.abs(tr-fr)===2)ns.ep=[(fr+tr)/2,fc];
+  if(type==='K'){if(col==='w'){ns.castling.wK=false;ns.castling.wQ=false;}else{ns.castling.bK=false;ns.castling.bQ=false;}if(fc===4&&tc===6){ns.board[fr][5]=ns.board[fr][7];ns.board[fr][7]=null;}else if(fc===4&&tc===2){ns.board[fr][3]=ns.board[fr][0];ns.board[fr][0]=null;}}
+  if(piece==='wR'){if(fr===7&&fc===0)ns.castling.wQ=false;if(fr===7&&fc===7)ns.castling.wK=false;}
+  if(piece==='bR'){if(fr===0&&fc===0)ns.castling.bQ=false;if(fr===0&&fc===7)ns.castling.bK=false;}
+  return ns;
+}
 function legalMoves(s,r,c){const p=s.board[r][c];if(!p||p[0]!==s.turn)return[];const col=p[0];return rawMoves(s,r,c).filter(([tr,tc])=>!inCheck(applyMv(s,r,c,tr,tc),col));}
 function hasLegal(s){for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=s.board[r][c];if(p&&p[0]===s.turn&&legalMoves(s,r,c).length)return true;}return false;}
 function isMate(s){return inCheck(s,s.turn)&&!hasLegal(s);}
 function isStale(s){return !inCheck(s,s.turn)&&!hasLegal(s);}
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════
 // GAME UI
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════
 let gs=newState(),sel=null,legDst=[],lastMv=null;
 let gameOn=false,wTime=600,bTime=600,gTimer=null,mRowCnt=0,animLk=false;
+
 function getSq(r,c,bid='board'){return document.querySelector(`#${bid} .sq[data-r="${r}"][data-c="${c}"]`);}
-function animMv(fr,fc,tr,tc,gl,cb,bid='board'){const fe=getSq(fr,fc,bid),te=getSq(tr,tc,bid);if(!fe||!te){cb();return;}const fr2=fe.getBoundingClientRect(),tr2=te.getBoundingClientRect();const rp=fe.querySelector('.piece');if(rp)rp.style.opacity='0';const fly=document.createElement('div');fly.className='fly';fly.textContent=gl;fly.style.cssText=`left:${fr2.left}px;top:${fr2.top}px;width:${fr2.width}px;height:${fr2.height}px;`;document.body.appendChild(fly);void fly.offsetWidth;requestAnimationFrame(()=>{fly.style.left=tr2.left+'px';fly.style.top=tr2.top+'px';});setTimeout(()=>{fly.remove();cb();},190);}
-function animCap(r,c,col,bid='board'){const el=getSq(r,c,bid);if(!el)return;const b=document.createElement('div');b.className='cburst '+col;el.appendChild(b);setTimeout(()=>b.remove(),360);}
-function animPlace(r,c,bid='board'){const el=getSq(r,c,bid);if(!el)return;const p=el.querySelector('.piece');if(!p)return;p.classList.remove('place');void p.offsetWidth;p.classList.add('place');setTimeout(()=>p.classList.remove('place'),180);}
+
+function animMv(fr,fc,tr,tc,gl,cb,bid='board'){
+  const fe=getSq(fr,fc,bid),te=getSq(tr,tc,bid);
+  if(!fe||!te){cb();return;}
+  const fr2=fe.getBoundingClientRect(),tr2=te.getBoundingClientRect();
+  const rp=fe.querySelector('.piece');if(rp)rp.style.opacity='0';
+  const fly=document.createElement('div');fly.className='fly';fly.textContent=gl;
+  fly.style.cssText=`left:${fr2.left}px;top:${fr2.top}px;width:${fr2.width}px;height:${fr2.height}px;`;
+  document.body.appendChild(fly);void fly.offsetWidth;
+  requestAnimationFrame(()=>{fly.style.left=tr2.left+'px';fly.style.top=tr2.top+'px';});
+  setTimeout(()=>{fly.remove();cb();},190);
+}
+function animCap(r,c,col,bid='board'){
+  const el=getSq(r,c,bid);if(!el)return;
+  const b=document.createElement('div');b.className='cburst '+col;el.appendChild(b);setTimeout(()=>b.remove(),360);
+}
+function animPlace(r,c,bid='board'){
+  const el=getSq(r,c,bid);if(!el)return;
+  const p=el.querySelector('.piece');if(!p)return;
+  p.classList.remove('place');void p.offsetWidth;p.classList.add('place');setTimeout(()=>p.classList.remove('place'),180);
+}
+
 function renderBoardEl(bid,state,selSq,lds,lm,isPz){
   const el=document.getElementById(bid);el.innerHTML='';
-  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
-    const sq=document.createElement('div');sq.className='sq '+((r+c)%2===0?'light':'dark');sq.dataset.r=r;sq.dataset.c=c;
-    if(lm&&((lm.fr===r&&lm.fc===c)||(lm.tr===r&&lm.tc===c)))sq.classList.add('last');
-    if(selSq&&selSq.r===r&&selSq.c===c)sq.classList.add('sel');
-    if(lds&&lds.some(d=>d[0]===r&&d[1]===c)){const isCap=state.board[r][c]!==null||(state.ep&&state.ep[0]===r&&state.ep[1]===c);sq.classList.add(isCap?'cap':'dot');}
-    const piece=state.board[r][c];
-    if(piece){const p=document.createElement('span');p.className='piece';p.textContent=GL[piece];sq.appendChild(p);if((piece==='wK'||piece==='bK')&&inCheck(state,piece[0]))sq.classList.add('incheck');}
-    sq.addEventListener('click',isPz?()=>pzClick(r,c):()=>sqClick(r,c));
-    el.appendChild(sq);
+  for(let r=0;r<8;r++){
+    for(let c=0;c<8;c++){
+      const sq=document.createElement('div');
+      sq.className='sq '+((r+c)%2===0?'light':'dark');
+      sq.dataset.r=r;sq.dataset.c=c;
+      if(lm&&((lm.fr===r&&lm.fc===c)||(lm.tr===r&&lm.tc===c)))sq.classList.add('last');
+      if(selSq&&selSq.r===r&&selSq.c===c)sq.classList.add('sel');
+      if(lds&&lds.some(d=>d[0]===r&&d[1]===c)){
+        const isCap=state.board[r][c]!==null||(state.ep&&state.ep[0]===r&&state.ep[1]===c);
+        sq.classList.add(isCap?'cap':'dot');
+      }
+      const piece=state.board[r][c];
+      if(piece){
+        const p=document.createElement('span');p.className='piece';p.textContent=GL[piece];sq.appendChild(p);
+        if((piece==='wK'||piece==='bK')&&inCheck(state,piece[0]))sq.classList.add('incheck');
+      }
+      sq.addEventListener('click',isPz?()=>pzClick(r,c):()=>sqClick(r,c));
+      el.appendChild(sq);
+    }
   }
 }
-function renderBoard(){renderBoardEl('board',gs,sel,legDst,lastMv,false);document.getElementById('wp').classList.toggle('active',gs.turn==='w');document.getElementById('bp').classList.toggle('active',gs.turn==='b');document.getElementById('w-st').textContent=gs.turn==='w'?'Your Turn':'Waiting';document.getElementById('b-st').textContent=gs.turn==='b'?'Your Turn':'Waiting';}
-function sqClick(r,c){if(!gameOn||animLk)return;if(vsBot&&gs.turn===botClr)return;const piece=gs.board[r][c];if(sel){const dst=legDst.find(d=>d[0]===r&&d[1]===c);if(dst){const sp=gs.board[sel.r][sel.c];if(sp[1]==='P'&&(r===0||r===7))showPromo(sel.r,sel.c,r,c);else exMv(sel.r,sel.c,r,c);sel=null;legDst=[];return;}if(piece&&piece[0]===gs.turn){sel={r,c};legDst=legalMoves(gs,r,c);renderBoard();return;}sel=null;legDst=[];renderBoard();return;}if(piece&&piece[0]===gs.turn){sel={r,c};legDst=legalMoves(gs,r,c);}renderBoard();}
-function exMv(fr,fc,tr,tc,pr='Q'){const gl=GL[gs.board[fr][fc]];const hasCap=gs.board[tr][tc]!==null||(gs.board[fr][fc][1]==='P'&&gs.ep&&tr===gs.ep[0]&&tc===gs.ep[1]);const cc=gs.turn;animLk=true;animMv(fr,fc,tr,tc,gl,()=>{if(hasCap)animCap(tr,tc,cc);doMove(fr,fc,tr,tc,pr);requestAnimationFrame(()=>animPlace(tr,tc));animLk=false;});}
-function doMove(fr,fc,tr,tc,pr='Q'){const mp=gs.board[fr][fc],cp=gs.board[tr][tc];const isEP=mp[1]==='P'&&gs.ep&&tr===gs.ep[0]&&tc===gs.ep[1];gs=applyMv(gs,fr,fc,tr,tc,pr);lastMv={fr,fc,tr,tc};addMoveLog(buildNot(fr,fc,tr,tc,mp,cp,pr,isEP));renderBoard();updateStatus();if(isMate(gs)){gameOn=false;clearInterval(gTimer);endGame('checkmate',gs.turn==='w'?'black':'white');return;}if(isStale(gs)){gameOn=false;clearInterval(gTimer);endGame('stalemate',null);return;}if(vsBot&&gs.turn===botClr)setTimeout(doBotMove,400);}
-function doBotMove(){if(!gameOn||!vsBot||gs.turn!==botClr)return;document.getElementById('think-bar').classList.add('on');setTimeout(()=>{const mv=getBest(gs,curBot);document.getElementById('think-bar').classList.remove('on');if(mv)exMv(mv.fr,mv.fc,mv.tr,mv.tc,'Q');},curBot.depth>=3?260:130);}
-function buildNot(fr,fc,tr,tc,mp,cp,pr,ep){const t=mp[1],ts=FS[tc]+(8-tr),isC=cp!==null||ep;if(t==='K'&&fc===4&&tc===6)return'O-O';if(t==='K'&&fc===4&&tc===2)return'O-O-O';let n='';if(t==='P'){if(isC)n+=FS[fc]+'x';n+=ts;if(tr===0||tr===7)n+='='+pr;}else{n+=t;if(isC)n+='x';n+=ts;}return n;}
-function addMoveLog(n){const ml=document.getElementById('move-list'),mc=gs.turn==='w'?'b':'w';ml.querySelectorAll('.mrow.lat').forEach(r=>r.classList.remove('lat'));if(mc==='w'){mRowCnt++;const row=document.createElement('div');row.className='mrow lat';row.id='mr'+mRowCnt;row.innerHTML=`<span class="mnum">${mRowCnt}.</span><span class="mw">${n}</span><span class="mb" id="mb${mRowCnt}"></span>`;ml.appendChild(row);}else{const sp=document.getElementById('mb'+mRowCnt);if(sp){sp.textContent=n;sp.closest('.mrow').classList.add('lat');}}ml.scrollTop=ml.scrollHeight;}
-function updateStatus(){const bar=document.getElementById('status-bar'),t=gs.turn==='w'?'White':'Black';if(inCheck(gs,gs.turn)){bar.textContent=`⚠ ${t} is in Check`;bar.className='status-bar chk';}else{bar.textContent=vsBot&&gs.turn===botClr?`${curBot.name} is thinking…`:`${t}'s Turn`;bar.className='status-bar';}}
-function showPromo(fr,fc,tr,tc){const row=document.getElementById('promo-row');row.innerHTML='';['Q','R','B','N'].forEach(p=>{const d=document.createElement('div');d.className='promo-p';d.textContent=GL[gs.turn+p];d.onclick=()=>{document.getElementById('promo-modal').classList.remove('on');exMv(fr,fc,tr,tc,p);sel=null;legDst=[];};row.appendChild(d);});document.getElementById('promo-modal').classList.add('on');}
-function updateTimers(){const we=document.getElementById('w-timer'),be=document.getElementById('b-timer');we.textContent=fmtT(wTime);be.textContent=fmtT(bTime);we.classList.toggle('low',wTime<=30);be.classList.toggle('low',bTime<=30);}
+
+function renderBoard(){
+  renderBoardEl('board',gs,sel,legDst,lastMv,false);
+  document.getElementById('wp').classList.toggle('active',gs.turn==='w');
+  document.getElementById('bp').classList.toggle('active',gs.turn==='b');
+  document.getElementById('w-st').textContent=gs.turn==='w'?'Your Turn':'Waiting';
+  document.getElementById('b-st').textContent=gs.turn==='b'?'Your Turn':'Waiting';
+}
+
+function sqClick(r,c){
+  if(!gameOn||animLk)return;
+  if(vsBot&&gs.turn===botClr)return;
+  const piece=gs.board[r][c];
+  if(sel){
+    const dst=legDst.find(d=>d[0]===r&&d[1]===c);
+    if(dst){
+      const sp=gs.board[sel.r][sel.c];
+      if(sp[1]==='P'&&(r===0||r===7))showPromo(sel.r,sel.c,r,c);
+      else exMv(sel.r,sel.c,r,c);
+      sel=null;legDst=[];return;
+    }
+    if(piece&&piece[0]===gs.turn){sel={r,c};legDst=legalMoves(gs,r,c);renderBoard();return;}
+    sel=null;legDst=[];renderBoard();return;
+  }
+  if(piece&&piece[0]===gs.turn){sel={r,c};legDst=legalMoves(gs,r,c);}
+  renderBoard();
+}
+
+function exMv(fr,fc,tr,tc,pr='Q'){
+  const gl=GL[gs.board[fr][fc]];
+  const hasCap=gs.board[tr][tc]!==null||(gs.board[fr][fc][1]==='P'&&gs.ep&&tr===gs.ep[0]&&tc===gs.ep[1]);
+  const cc=gs.turn;animLk=true;
+  animMv(fr,fc,tr,tc,gl,()=>{
+    if(hasCap)animCap(tr,tc,cc);
+    doMove(fr,fc,tr,tc,pr);
+    requestAnimationFrame(()=>animPlace(tr,tc));
+    animLk=false;
+  });
+}
+
+function doMove(fr,fc,tr,tc,pr='Q'){
+  const mp=gs.board[fr][fc],cp=gs.board[tr][tc];
+  const isEP=mp[1]==='P'&&gs.ep&&tr===gs.ep[0]&&tc===gs.ep[1];
+  gs=applyMv(gs,fr,fc,tr,tc,pr);lastMv={fr,fc,tr,tc};
+  addMoveLog(buildNot(fr,fc,tr,tc,mp,cp,pr,isEP));
+  renderBoard();updateStatus();
+  if(isMate(gs)){gameOn=false;clearInterval(gTimer);endGame('checkmate',gs.turn==='w'?'black':'white');return;}
+  if(isStale(gs)){gameOn=false;clearInterval(gTimer);endGame('stalemate',null);return;}
+  if(vsBot&&gs.turn===botClr)setTimeout(doBotMove,420);
+}
+
+function doBotMove(){
+  if(!gameOn||!vsBot||gs.turn!==botClr)return;
+  document.getElementById('think-bar').classList.add('on');
+  setTimeout(()=>{
+    const mv=getBest(gs,curBot);
+    document.getElementById('think-bar').classList.remove('on');
+    if(mv)exMv(mv.fr,mv.fc,mv.tr,mv.tc,'Q');
+  },curBot.depth>=3?280:140);
+}
+
+function buildNot(fr,fc,tr,tc,mp,cp,pr,ep){
+  const t=mp[1],ts=FS[tc]+(8-tr),isC=cp!==null||ep;
+  if(t==='K'&&fc===4&&tc===6)return'O-O';
+  if(t==='K'&&fc===4&&tc===2)return'O-O-O';
+  let n='';
+  if(t==='P'){if(isC)n+=FS[fc]+'x';n+=ts;if(tr===0||tr===7)n+='='+pr;}
+  else{n+=t;if(isC)n+='x';n+=ts;}
+  return n;
+}
+
+function addMoveLog(n){
+  const ml=document.getElementById('move-list'),mc=gs.turn==='w'?'b':'w';
+  ml.querySelectorAll('.mrow.lat').forEach(r=>r.classList.remove('lat'));
+  if(mc==='w'){
+    mRowCnt++;const row=document.createElement('div');row.className='mrow lat';row.id='mr'+mRowCnt;
+    row.innerHTML=`<span class="mnum">${mRowCnt}.</span><span class="mw">${n}</span><span class="mb" id="mb${mRowCnt}"></span>`;
+    ml.appendChild(row);
+  }else{
+    const sp=document.getElementById('mb'+mRowCnt);
+    if(sp){sp.textContent=n;sp.closest('.mrow').classList.add('lat');}
+  }
+  ml.scrollTop=ml.scrollHeight;
+}
+
+function updateStatus(){
+  const bar=document.getElementById('status-bar'),t=gs.turn==='w'?'White':'Black';
+  if(inCheck(gs,gs.turn)){bar.textContent=`⚠ ${t} is in Check`;bar.className='status-bar chk';}
+  else{bar.textContent=vsBot&&gs.turn===botClr?`${curBot.name} thinking…`:`${t}'s Turn`;bar.className='status-bar';}
+}
+
+function showPromo(fr,fc,tr,tc){
+  const row=document.getElementById('promo-row');row.innerHTML='';
+  ['Q','R','B','N'].forEach(p=>{
+    const d=document.createElement('div');d.className='promo-p';d.textContent=GL[gs.turn+p];
+    d.onclick=()=>{document.getElementById('promo-modal').classList.remove('on');exMv(fr,fc,tr,tc,p);sel=null;legDst=[];};
+    row.appendChild(d);
+  });
+  document.getElementById('promo-modal').classList.add('on');
+}
+
+function updateTimers(){
+  const we=document.getElementById('w-timer'),be=document.getElementById('b-timer');
+  we.textContent=fmtT(wTime);be.textContent=fmtT(bTime);
+  we.classList.toggle('low',wTime<=30);be.classList.toggle('low',bTime<=30);
+}
 function fmtT(s){return`${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;}
-function startTimer(){gTimer=setInterval(()=>{if(!gameOn)return;if(gs.turn==='w'){wTime--;if(wTime<=0){wTime=0;updateTimers();gameOn=false;clearInterval(gTimer);endGame('timeout','black');return;}}else{bTime--;if(bTime<=0){bTime=0;updateTimers();gameOn=false;clearInterval(gTimer);endGame('timeout','white');return;}}updateTimers();},1000);}
+function startTimer(){
+  gTimer=setInterval(()=>{
+    if(!gameOn)return;
+    if(gs.turn==='w'){wTime--;if(wTime<=0){wTime=0;updateTimers();gameOn=false;clearInterval(gTimer);endGame('timeout','black');return;}}
+    else{bTime--;if(bTime<=0){bTime=0;updateTimers();gameOn=false;clearInterval(gTimer);endGame('timeout','white');return;}}
+    updateTimers();
+  },1000);
+}
 function offerDraw(){if(!gameOn)return;if(confirm('Accept draw?')){gameOn=false;clearInterval(gTimer);endGame('draw',null);}}
 function resign(){if(!gameOn)return;if(confirm('Resign?')){gameOn=false;clearInterval(gTimer);endGame('resign',gs.turn==='w'?'black':'white');}}
-function endGame(reason,winner){const m={checkmate:'Checkmate',stalemate:'Stalemate – Draw',draw:'Draw agreed',resign:'Resignation',timeout:'Time Out'};document.getElementById('go-reason').textContent=m[reason]||reason;if(!winner){document.getElementById('go-title').textContent='Draw';document.getElementById('go-winner').textContent='';document.getElementById('go-ico').textContent='½';}else{const pn=document.getElementById(winner[0]+'-name').textContent;document.getElementById('go-title').textContent=winner==='white'?'White Wins!':'Black Wins!';document.getElementById('go-winner').textContent=pn+' wins!';document.getElementById('go-ico').textContent='🏆';}document.getElementById('go-modal').style.display='flex';}
+function endGame(reason,winner){
+  const m={checkmate:'Checkmate',stalemate:'Stalemate – Draw',draw:'Draw agreed',resign:'Resignation',timeout:'Time Out'};
+  document.getElementById('go-reason').textContent=m[reason]||reason;
+  if(!winner){document.getElementById('go-title').textContent='Draw';document.getElementById('go-winner').textContent='';document.getElementById('go-ico').textContent='½';}
+  else{const pn=document.getElementById(winner[0]+'-name').textContent;document.getElementById('go-title').textContent=winner==='white'?'White Wins!':'Black Wins!';document.getElementById('go-winner').textContent=pn+' wins!';document.getElementById('go-ico').textContent='🏆';}
+  document.getElementById('go-modal').style.display='flex';
+}
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════
+// PUZZLES DATABASE (100 positions)
+// ════════════════════════════════════════
+const PUZZLES=[
+  {theme:"Mate in 1",desc:"White to move — checkmate in one!",hint:"The queen on f7 delivers scholar's mate.",sol:"Qf7#",turn:"w",fen:"r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR",ep:null,move:[[1,5,1,4]]},
+  {theme:"Back Rank Mate",desc:"The rook delivers a crushing back rank mate.",hint:"Rook to d8 — the king has no escape.",sol:"Rd8#",turn:"w",fen:"6k1/5ppp/8/8/8/8/8/3R2K1",ep:null,move:[[7,3,0,3]]},
+  {theme:"Smothered Mate",desc:"The knight delivers a smothered mate!",hint:"Knight to f7 — the king is smothered by its own pieces.",sol:"Nf7#",turn:"w",fen:"6rk/6pp/7N/8/8/8/8/6K1",ep:null,move:[[2,7,1,5]]},
+  {theme:"Mate in 1",desc:"Find the checkmate in one move.",hint:"Ra8 — the rook slides to the back rank.",sol:"Ra8#",turn:"w",fen:"k7/1R6/2K5/8/8/8/8/8",ep:null,move:[[1,1,0,0]]},
+  {theme:"Knight Fork",desc:"Fork the king and rook with the knight!",hint:"Find the square where the knight attacks both king and rook.",sol:"Ne7+ forks king and rook on a8",turn:"w",fen:"r3k3/8/8/3N4/8/8/8/4K3",ep:null,move:[[3,3,1,4]]},
+  {theme:"Mate in 1",desc:"Rook slides to f8 — checkmate!",hint:"Rf8#",sol:"Rf8#",turn:"w",fen:"5rk1/5ppp/8/8/8/8/8/5RK1",ep:null,move:[[7,5,0,5]]},
+  {theme:"Skewer",desc:"Attack the king to win the rook behind it.",hint:"Check on f8 — the rook behind is lost.",sol:"Rf8+ skewer wins the rook",turn:"w",fen:"4k3/4r3/8/8/8/8/8/4KR2",ep:null,move:[[7,5,0,5]]},
+  {theme:"Mate in 1",desc:"Queen to e8 — checkmate!",hint:"Qe8#",sol:"Qe8#",turn:"w",fen:"4k3/8/4K3/8/8/8/8/4Q3",ep:null,move:[[7,4,0,4]]},
+  {theme:"Ladder Mate",desc:"Two rooks march up to deliver mate.",hint:"Rc8# — the rooks take turns checking.",sol:"Rc8#",turn:"w",fen:"k7/8/8/8/8/8/8/KRR5",ep:null,move:[[7,2,0,2]]},
+  {theme:"Bishop Fork",desc:"The bishop forks king and rook.",hint:"The bishop attacks diagonally — find the fork.",sol:"Bg6+ forks king and rook",turn:"w",fen:"rn2k3/8/8/8/8/3B4/8/4K3",ep:null,move:[[5,3,2,6]]},
+  {theme:"Mate in 1",desc:"Qb7 is checkmate.",hint:"Qb7# — the queen covers all escape squares.",sol:"Qb7#",turn:"w",fen:"4k3/8/8/8/8/8/1Q6/4K3",ep:null,move:[[6,1,1,1]]},
+  {theme:"Pawn Promotion",desc:"The pawn queens — and it's checkmate!",hint:"a8=Q+ — promote with check.",sol:"a8=Q# — promotion is mate",turn:"w",fen:"4k3/P3K3/8/8/8/8/8/8",ep:null,move:[[1,0,0,0]]},
+  {theme:"Mate in 1",desc:"Ra8 — king cornered!",hint:"Ra8# with king support from c6.",sol:"Ra8#",turn:"w",fen:"k7/8/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
+  {theme:"Mate in 1",desc:"Queen slides to g8 — game over.",hint:"Qg8#",sol:"Qg8#",turn:"w",fen:"6k1/Q7/8/8/8/8/8/6K1",ep:null,move:[[1,0,0,6]]},
+  {theme:"Pawn Fork",desc:"The pawn forks two pieces at once!",hint:"Push to e5 — it hits both pieces.",sol:"e5 forks bishop and knight",turn:"w",fen:"4k3/8/8/2n1b3/3P4/8/8/4K3",ep:null,move:[[4,3,3,3]]},
+  {theme:"Mate in 1",desc:"Rd8 — the back rank is fatal.",hint:"Rd8#",sol:"Rd8#",turn:"w",fen:"3k4/3R4/3K4/8/8/8/8/8",ep:null,move:[[1,3,0,3]]},
+  {theme:"Winning the Knight",desc:"Win the stranded knight on b5.",hint:"Attack it with your rook.",sol:"Rd7 — the knight is lost",turn:"w",fen:"4k3/8/8/1n6/8/8/3R4/4K3",ep:null,move:[[6,3,1,3]]},
+  {theme:"Mate in 1",desc:"Rb8 — king cornered by support from c6.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k1K5/8/1R6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
+  {theme:"Mate in 2",desc:"Force checkmate in two moves.",hint:"Queen check, then the rook delivers mate.",sol:"Qd8+ Ke7, Rf7#",turn:"w",fen:"4k3/8/8/8/8/8/8/R2QK3",ep:null,move:[[7,3,0,3],[7,0,1,5]]},
+  {theme:"Pin the Knight",desc:"Pin the knight to the king — win it.",hint:"Bishop to f6 pins the knight on e7.",sol:"Bf6 — knight is pinned and lost",turn:"w",fen:"4k3/4n3/8/8/8/8/8/B3K3",ep:null,move:[[7,0,2,5]]},
+  {theme:"Mate in 1",desc:"Ra7 — checkmate!",hint:"The rook slides to a7.",sol:"Ra7#",turn:"w",fen:"4k3/8/4K3/8/8/8/8/R7",ep:null,move:[[7,0,1,0]]},
+  {theme:"Discovered Check",desc:"Move the knight to reveal a devastating rook check.",hint:"Ne5 uncovers the rook on the d-file.",sol:"Ne5 — discovered check wins material",turn:"w",fen:"4k3/8/8/8/8/3N4/8/3RK3",ep:null,move:[[5,3,3,4]]},
+  {theme:"Mate in 1",desc:"Qh8 — the king is trapped by its own pawns.",hint:"Qh8#",sol:"Qh8#",turn:"w",fen:"7k/7p/8/8/8/7B/8/6QK",ep:null,move:[[7,6,0,7]]},
+  {theme:"Mate in 1",desc:"Re8 — the rook delivers the blow.",hint:"Re8#",sol:"Re8#",turn:"w",fen:"4k3/8/4K3/4R3/8/8/8/8",ep:null,move:[[3,4,0,4]]},
+  {theme:"En Passant",desc:"Capture en passant to win a pawn!",hint:"Take the pawn en passant on d6.",sol:"exd6 e.p. — en passant capture",turn:"w",fen:"4k3/8/8/3pP3/8/8/8/4K3",ep:[2,3],move:[[3,4,2,3]]},
+  {theme:"Mate in 1",desc:"Rh8 — the rook delivers the final check.",hint:"Rh8#",sol:"Rh8#",turn:"w",fen:"7k/R7/7K/8/8/8/8/8",ep:null,move:[[1,0,0,0]]},
+  {theme:"Mate in 1",desc:"Qg7 — checkmate!",hint:"Qg7# — the h-pawn blocks the king.",sol:"Qg7#",turn:"w",fen:"6k1/6Qp/8/8/8/8/8/6K1",ep:null,move:[[1,6,0,6]]},
+  {theme:"Mate in 1",desc:"Rook to e8 finishes the game.",hint:"Re8#",sol:"Re8#",turn:"w",fen:"5rk1/4Rppp/8/8/8/8/8/6K1",ep:null,move:[[1,4,0,6]]},
+  {theme:"Mate in 1",desc:"Rb8 — king has nowhere to hide.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k7/pp6/K7/1R6/8/8/8/8",ep:null,move:[[3,1,0,1]]},
+  {theme:"Trapping the Bishop",desc:"Trap and win the bishop on b6.",hint:"Push c6 — the bishop is trapped.",sol:"c6 — bishop is trapped and lost",turn:"w",fen:"4k3/8/1b6/2P5/8/8/8/4K3",ep:null,move:[[3,2,2,2]]},
+  {theme:"Mate in 1",desc:"Qa3 — checkmate with the king on b3.",hint:"Qa3#",sol:"Qa3#",turn:"w",fen:"8/8/8/8/8/1k6/8/QK6",ep:null,move:[[7,0,5,0]]},
+  {theme:"Knight Fork",desc:"The knight forks king and queen!",hint:"Ne5+ — attacks both the king and queen.",sol:"Ne5+ forks king and queen",turn:"w",fen:"3k4/3q4/8/8/8/5N2/8/5K2",ep:null,move:[[5,5,3,4]]},
+  {theme:"Mate in 1",desc:"Qb8 — checkmate!",hint:"Qb8#",sol:"Qb8#",turn:"w",fen:"k7/1p6/1K6/8/8/8/8/7Q",ep:null,move:[[7,7,0,1]]},
+  {theme:"Mate in 1",desc:"Rd8 — king cannot escape.",hint:"Rd8# — the rook slides in.",sol:"Rd8#",turn:"w",fen:"2k5/8/2K5/3R4/8/8/8/8",ep:null,move:[[3,3,0,3]]},
+  {theme:"Double Rook Mate",desc:"Two rooks deliver back rank mate.",hint:"Ra8# — both rooks control the back rank.",sol:"Ra8#",turn:"w",fen:"6k1/R6R/8/8/8/8/8/6K1",ep:null,move:[[1,0,0,0]]},
+  {theme:"Pawn Break",desc:"The pawn breaks through to promotion!",hint:"b5 — one of the pawns will queen.",sol:"b5 — pawn breaks through",turn:"w",fen:"8/8/8/ppp5/PPP5/8/8/4K1k1",ep:null,move:[[4,1,3,2]]},
+  {theme:"Mate in 1",desc:"Qe8 — king blocked by its own pawns.",hint:"Qe8#",sol:"Qe8#",turn:"w",fen:"4k3/4p3/3pKp2/8/8/8/8/4Q3",ep:null,move:[[7,4,0,4]]},
+  {theme:"Mate in 1",desc:"Rb8 — king is cornered.",hint:"Rb8# — the rook and king coordinate.",sol:"Rb8#",turn:"w",fen:"k7/p7/1p6/8/8/8/8/2KR4",ep:null,move:[[7,3,0,1]]},
+  {theme:"Removing the Defender",desc:"Capture the piece defending the king.",hint:"Bishop takes on f7 — removes a key defender.",sol:"Bxf7+ — removes key defender",turn:"w",fen:"r1bqk2r/ppp2ppp/2n2n2/3pp3/1bBPP3/2N2N2/PPP2PPP/R1BQK2R",ep:null,move:[[2,2,1,5]]},
+  {theme:"Mate in 1",desc:"Rg8 — checkmate!",hint:"Rg8# — king blocked by its own pieces.",sol:"Rg8#",turn:"w",fen:"r5k1/8/6K1/8/8/8/8/7R",ep:null,move:[[7,7,0,6]]},
+  {theme:"Smothered Mate",desc:"The knight smothers the king!",hint:"Ng7# — king smothered by rooks.",sol:"Ng7#",turn:"w",fen:"6rk/6pp/8/6N1/8/8/8/6K1",ep:null,move:[[3,6,0,6]]},
+  {theme:"Pawn Endgame",desc:"Advance the pawn — it can't be stopped!",hint:"e5 — gains key squares in the endgame.",sol:"e5 — winning pawn endgame",turn:"w",fen:"8/8/8/4k3/4P3/4K3/8/8",ep:null,move:[[4,4,3,4]]},
+  {theme:"Queen & Bishop",desc:"Queen and bishop battery fires — Qg8#",hint:"Qg8# — the bishop covers f7.",sol:"Qg8#",turn:"w",fen:"6k1/6pp/8/8/8/7B/8/6QK",ep:null,move:[[7,6,0,6]]},
+  {theme:"Mate in 1",desc:"Ra8 — the curtain falls.",hint:"Ra8# — king has no escape.",sol:"Ra8#",turn:"w",fen:"2k5/R7/2K5/8/8/8/8/8",ep:null,move:[[1,0,0,0]]},
+  {theme:"Back Rank Combo",desc:"Queen fires on the back rank.",hint:"Rd8# — the queen and rook combine.",sol:"Rd8#",turn:"w",fen:"3rk3/3R4/8/8/8/8/8/3Q1K2",ep:null,move:[[1,3,0,3]]},
+  {theme:"Queen Fork",desc:"Queen forks king and rook simultaneously!",hint:"Qa8+ — check and threat at the same time.",sol:"Qa8+ forks king and rook",turn:"w",fen:"r3k3/8/8/8/8/8/8/Q3K3",ep:null,move:[[7,0,0,0]]},
+  {theme:"Mate in 1",desc:"Rc8 — the rook drops in for mate.",hint:"Rc8#",sol:"Rc8#",turn:"w",fen:"k7/2R5/1K6/8/8/8/8/8",ep:null,move:[[1,2,0,2]]},
+  {theme:"Mate in 1",desc:"Qh7 — checkmate!",hint:"Qh7# — queen covers all escape squares.",sol:"Qh7#",turn:"w",fen:"6k1/7p/8/8/8/8/8/4Q1K1",ep:null,move:[[7,4,1,7]]},
+  {theme:"Win the Bishop",desc:"The bishop on b5 is hanging — win it.",hint:"Attack the bishop with your rook.",sol:"Rb7 — bishop is won",turn:"w",fen:"4k3/8/8/1b6/8/8/3R4/4K3",ep:null,move:[[6,3,1,1]]},
+  {theme:"Mate in 1",desc:"Re8 — rook delivers back rank mate.",hint:"Re8#",sol:"Re8#",turn:"w",fen:"4k3/3R4/4K3/8/8/8/8/8",ep:null,move:[[1,3,0,3]]},
+  {theme:"Mate in 1",desc:"Qg7 — the king can't escape.",hint:"Qg7# — king blocked.",sol:"Qg7#",turn:"w",fen:"6k1/7p/6K1/8/8/8/8/6Q1",ep:null,move:[[7,6,1,6]]},
+  {theme:"Back Rank Combo",desc:"Rook check leads to forced back rank mate.",hint:"Re8+ forces Rxe8, then Rxe8#",sol:"Re8+ Rxe8, Rxe8#",turn:"w",fen:"r5k1/5ppp/8/8/8/8/8/4R1K1",ep:null,move:[[7,4,0,4]]},
+  {theme:"Mate in 1",desc:"Rb8 — king is trapped.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k7/1R6/8/1K6/8/8/8/8",ep:null,move:[[1,1,0,1]]},
+  {theme:"Knight Delivers Mate",desc:"The knight gives checkmate!",hint:"Nf6# — king trapped in the corner.",sol:"Nf6#",turn:"w",fen:"6k1/5ppp/8/5N2/8/8/8/6K1",ep:null,move:[[3,5,1,5]]},
+  {theme:"Mate in 1",desc:"Qf8 — checkmate!",hint:"Qf8#",sol:"Qf8#",turn:"w",fen:"5k2/5ppp/8/8/8/8/8/4QK2",ep:null,move:[[7,4,0,5]]},
+  {theme:"Knight Fork",desc:"Nd5+ forks king and rook.",hint:"Nd5+ — the knight hits both targets.",sol:"Nd5+ forks king and rook",turn:"w",fen:"4k3/8/8/r7/8/2N5/8/4K3",ep:null,move:[[5,2,3,3]]},
+  {theme:"Mate in 1",desc:"Ra8 — game over.",hint:"Ra8# — the king has nowhere to go.",sol:"Ra8#",turn:"w",fen:"k1K5/1p6/8/8/8/8/8/R7",ep:null,move:[[7,0,0,0]]},
+  {theme:"Mate in 1",desc:"Qg8 — king blocked by its own pawns.",hint:"Qg8#",sol:"Qg8#",turn:"w",fen:"6k1/5ppp/8/8/8/8/8/4Q1K1",ep:null,move:[[7,4,0,6]]},
+  {theme:"Discovered Attack",desc:"Move the knight to reveal a winning attack.",hint:"Nd5 — discovers rook's attack on the a5 rook.",sol:"Nd5 — discovered attack wins material",turn:"w",fen:"4k3/8/8/r7/8/3N4/8/3RK3",ep:null,move:[[5,3,3,4]]},
+  {theme:"Mate in 1",desc:"Rd8 — the king is cornered.",hint:"Rd8#",sol:"Rd8#",turn:"w",fen:"2k5/ppp5/8/8/8/8/8/2KR4",ep:null,move:[[7,3,0,3]]},
+  {theme:"Mate in 1",desc:"Rf8 — back rank checkmate!",hint:"Rf8#",sol:"Rf8#",turn:"w",fen:"6k1/5Rpp/8/8/8/8/8/6K1",ep:null,move:[[1,5,0,5]]},
+  {theme:"Zugzwang",desc:"Force zugzwang — any Black move loses.",hint:"Kd4 — take the opposition.",sol:"Kd4 — zugzwang, Black must give ground",turn:"w",fen:"8/8/8/3k4/3P4/3K4/8/8",ep:null,move:[[5,3,4,3]]},
+  {theme:"Mate in 1",desc:"Qa8 — checkmate!",hint:"Qa8# — king trapped in the corner.",sol:"Qa8#",turn:"w",fen:"k7/p7/K7/8/8/8/8/7Q",ep:null,move:[[7,7,0,0]]},
+  {theme:"Mate in 1",desc:"Rd3 — checkmate!",hint:"Rd3# — king is on c3.",sol:"Rd3#",turn:"w",fen:"8/8/8/8/8/2k5/8/1K1R4",ep:null,move:[[7,3,5,3]]},
+  {theme:"Mate in 1",desc:"Qd8 — the queen drops in.",hint:"Qd8# — the rook on e7 covers the escape.",sol:"Qd8#",turn:"w",fen:"3rk3/8/8/8/8/8/8/3Q1RK1",ep:null,move:[[7,3,0,3]]},
+  {theme:"Mate in 1",desc:"Ra8 — with king support.",hint:"Ra8# — the king cuts off all escapes.",sol:"Ra8#",turn:"w",fen:"k7/8/2K5/8/8/8/8/R7",ep:null,move:[[7,0,0,0]]},
+  {theme:"Smothered Mate",desc:"Nf7 — the classic smothered mate!",hint:"Nf7# — king is smothered by its own rooks.",sol:"Nf7#",turn:"w",fen:"5rrk/6pp/7N/8/8/8/8/7K",ep:null,move:[[2,7,1,5]]},
+  {theme:"Mate in 1",desc:"Qg8 — checkmate!",hint:"Qg8# — pawns cage the king.",sol:"Qg8#",turn:"w",fen:"6k1/5pQp/8/8/8/8/8/6K1",ep:null,move:[[1,6,0,6]]},
+  {theme:"Mate in 1",desc:"Re8 — the rook delivers checkmate.",hint:"Re8#",sol:"Re8#",turn:"w",fen:"4k3/8/4K3/8/8/8/8/4R3",ep:null,move:[[7,4,0,4]]},
+  {theme:"Mate in 1",desc:"Rb8 — a quiet but decisive move.",hint:"Rb8# — the rook slides to b8.",sol:"Rb8#",turn:"w",fen:"k7/p7/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
+  {theme:"Mate in 1",desc:"Re8 — back rank checkmate!",hint:"Re8# — the king is stuck on g8.",sol:"Re8#",turn:"w",fen:"r5k1/6pp/8/8/8/8/6PP/4R1K1",ep:null,move:[[7,4,0,4]]},
+  {theme:"Mate in 1",desc:"Qe8 — king blocked by its own pawns.",hint:"Qe8# — pawns on d6, e7, f6 cage the king.",sol:"Qe8#",turn:"w",fen:"4k3/4p3/4K3/8/8/8/8/4Q3",ep:null,move:[[7,4,0,4]]},
+  {theme:"Mate in 1",desc:"Rc8 — the rook closes in for mate.",hint:"Rc8# — king trapped on a8.",sol:"Rc8#",turn:"w",fen:"k7/1p6/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,2]]},
+  {theme:"Mate in 1",desc:"Qg8 — game over!",hint:"Qg8# — king cannot move.",sol:"Qg8#",turn:"w",fen:"6k1/5ppp/8/8/8/8/8/4Q1K1",ep:null,move:[[7,4,0,6]]},
+  {theme:"Pawn Endgame Key",desc:"Advance the pawn — the endgame is won.",hint:"e5 — the key pawn break.",sol:"e5 — decisive pawn advance",turn:"w",fen:"8/8/8/4k3/4P3/4K3/8/8",ep:null,move:[[4,4,3,4]]},
+  {theme:"Mate in 1",desc:"Ra8 — the curtain falls.",hint:"Ra8# — nowhere to run.",sol:"Ra8#",turn:"w",fen:"k7/8/2K5/8/8/8/8/7R",ep:null,move:[[7,7,0,0]]},
+  {theme:"Mate in 1",desc:"Qh8 — checkmate in the corner!",hint:"Qh8#",sol:"Qh8#",turn:"w",fen:"7k/6pp/7K/8/8/8/8/7Q",ep:null,move:[[7,7,0,7]]},
+  {theme:"Back Rank",desc:"Rd8 — exploit the back rank.",hint:"Rd8# — the rooks are tied down.",sol:"Rd8#",turn:"w",fen:"3rk3/3R4/8/8/8/8/8/3Q1K2",ep:null,move:[[1,3,0,3]]},
+  {theme:"Mate in 1",desc:"Rb8 — the king is mated.",hint:"Rb8# — pawns on a7 block the escape.",sol:"Rb8#",turn:"w",fen:"k7/p7/K7/1R6/8/8/8/8",ep:null,move:[[3,1,0,1]]},
+  {theme:"Mate in 1",desc:"Rd8 — back rank checkmate!",hint:"Rd8# — the rook slides in.",sol:"Rd8#",turn:"w",fen:"2k5/ppp5/8/8/8/8/8/3RK3",ep:null,move:[[7,3,0,3]]},
+  {theme:"Smothered",desc:"Knight jumps to f7 for smothered mate!",hint:"Nf7# — the rooks smother the king.",sol:"Nf7#",turn:"w",fen:"6rk/6pp/8/8/7N/8/8/6K1",ep:null,move:[[4,7,1,5]]},
+  {theme:"Mate in 1",desc:"Qg8 — queen strikes the back rank.",hint:"Qg8#",sol:"Qg8#",turn:"w",fen:"6k1/5ppp/8/8/8/8/8/3Q1K2",ep:null,move:[[7,3,0,6]]},
+  {theme:"Mate in 1",desc:"Rb8 — the decisive rook move.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k1K5/8/2R5/8/8/8/8/8",ep:null,move:[[2,2,0,1]]},
+  {theme:"Mate in 1",desc:"Re8 — the king is lost.",hint:"Re8# — the rook slides along the e-file.",sol:"Re8#",turn:"w",fen:"4k3/4p3/3RK3/8/8/8/8/8",ep:null,move:[[2,3,0,3]]},
+  {theme:"Mate in 1",desc:"Qe8 — game, set, match.",hint:"Qe8# — all squares covered.",sol:"Qe8#",turn:"w",fen:"4k3/8/4K3/8/8/8/8/6Q1",ep:null,move:[[7,6,0,4]]},
+  {theme:"Mate in 1",desc:"Ra8 — the final rook move.",hint:"Ra8# — king is on a8.",sol:"Ra8#",turn:"w",fen:"k7/pp6/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
+  {theme:"Mate in 1",desc:"Qh8 — corner the king!",hint:"Qh8#",sol:"Qh8#",turn:"w",fen:"7k/5ppp/8/8/8/8/8/5QK1",ep:null,move:[[7,5,0,7]]},
+  {theme:"Mate in 1",desc:"Rd8 — king is caught in the middle.",hint:"Rd8# — the rook slides to d8.",sol:"Rd8#",turn:"w",fen:"3k4/3R4/2K5/8/8/8/8/8",ep:null,move:[[1,3,0,3]]},
+  {theme:"Mate in 1",desc:"Rb8 — the rook delivers the long-awaited mate.",hint:"Rb8#",sol:"Rb8#",turn:"w",fen:"k7/8/KR6/8/8/8/8/8",ep:null,move:[[2,1,0,1]]},
+  {theme:"Mate in 1",desc:"Qf8 — checkmate!",hint:"Qf8# — the rook on e7 assists.",sol:"Qf8#",turn:"w",fen:"5k2/4Rppp/8/8/8/8/8/5QK1",ep:null,move:[[7,5,0,5]]},
+  {theme:"Mate in 1",desc:"Qg7 — checkmate!",hint:"Qg7# — the king is on h8.",sol:"Qg7#",turn:"w",fen:"6k1/8/6K1/8/8/8/8/6Q1",ep:null,move:[[7,6,1,6]]},
+  {theme:"Mate in 1",desc:"Re8 — rook to the back rank!",hint:"Re8# — the rook on e7 moves forward.",sol:"Re8#",turn:"w",fen:"4k3/4R3/5K2/8/8/8/8/8",ep:null,move:[[1,4,0,4]]},
+  {theme:"Mate in 1",desc:"Qf7 — checkmate!",hint:"Qf7# — king is caught.",sol:"Qf7#",turn:"w",fen:"5k2/5K2/8/8/8/8/8/6Q1",ep:null,move:[[7,6,1,5]]},
+  {theme:"Mate in 1",desc:"Rc8 — the rook drops in!",hint:"Rc8# — the king has no escape.",sol:"Rc8#",turn:"w",fen:"k7/pp6/2K5/8/8/8/8/2R5",ep:null,move:[[7,2,0,2]]},
+  {theme:"Mate in 1",desc:"Rd8 — game over!",hint:"Rd8# — the rook delivers the final blow.",sol:"Rd8#",turn:"w",fen:"2k5/8/2K5/8/8/8/8/3R4",ep:null,move:[[7,3,0,3]]},
+  {theme:"Mate in 1",desc:"Ra8 — the final shot!",hint:"Ra8# — king is on a8.",sol:"Ra8#",turn:"w",fen:"k7/p7/K7/8/8/8/8/R7",ep:null,move:[[7,0,0,0]]},
+];
+
+// ════════════════════════════════════════
 // PUZZLE SYSTEM
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════
 const PZ_LIMIT=100;
 let pzGs=null,pzSel=null,pzLeg=[],pzLastMv=null,pzStep=0,pzIdx=0,pzData=null;
+
 function todayKey(){const d=new Date();return`cbj_pz_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;}
 function loadPzData(){try{const r=localStorage.getItem(todayKey());if(r)return JSON.parse(r);}catch(e){}return{done:0,results:Array(PZ_LIMIT).fill(null)};}
 function savePzData(){try{localStorage.setItem(todayKey(),JSON.stringify(pzData));}catch(e){}}
-function initPuzzles(){pzData=loadPzData();let start=0;for(let i=0;i<PZ_LIMIT;i++){if(pzData.results[i]===null){start=i;break;}if(i===PZ_LIMIT-1&&pzData.results[i]!==null)start=-1;}buildPipGrid();if(start===-1){showDailyLimit();return;}loadPuzzle(start);}
-function buildPipGrid(){const g=document.getElementById('pz-pip-grid');g.innerHTML='';for(let i=0;i<PZ_LIMIT;i++){const pip=document.createElement('div');pip.className='pz-pip';const r=pzData.results[i];if(r==='s')pip.classList.add('solved');else if(r==='f')pip.classList.add('failed');else if(r==='k')pip.classList.add('skipped');if(i===pzIdx&&r===null)pip.classList.add('cur');pip.title=`Puzzle ${i+1}`;pip.onclick=(idx=>()=>loadPuzzle(idx))(i);g.appendChild(pip);}const done=pzData.results.filter(r=>r!==null).length;document.getElementById('pz-done').textContent=done;const pct=(done/PZ_LIMIT*100).toFixed(0);document.getElementById('pz-fill').style.width=pct+'%';document.getElementById('pz-blbl').textContent=`${done} of ${PZ_LIMIT} completed`;}
-function loadPuzzle(idx){if(pzData.done>=PZ_LIMIT&&pzData.results[idx]===null){showDailyLimit();return;}pzIdx=idx;pzStep=0;pzSel=null;pzLeg=[];pzLastMv=null;const pz=PUZZLES[idx%PUZZLES.length];pzGs={board:fenToBoard(pz.fen),turn:pz.turn,castling:{wK:false,wQ:false,bK:false,bQ:false},ep:pz.ep||null,hm:0,fm:1};document.getElementById('pz-theme').textContent=pz.theme;document.getElementById('pz-desc').textContent=pz.desc;document.getElementById('pz-turn').textContent=(pz.turn==='w'?'♔ White':'♚ Black')+' to move';const hint=document.getElementById('pz-hint');hint.textContent='';hint.style.display='none';document.getElementById('pz-fb').textContent='';document.getElementById('pz-fb').className='pz-fb';document.getElementById('pz-status').textContent='Find the best move!';document.getElementById('pz-status').className='status-bar';renderPzBoard();buildPipGrid();}
-function renderPzBoard(){renderBoardEl('pz-board',pzGs,pzSel,pzLeg,pzLastMv,true);}
-function pzClick(r,c){if(!pzGs)return;const pz=PUZZLES[pzIdx%PUZZLES.length];if(pzStep>=pz.move.length)return;if(pzData.results[pzIdx]!==null)return;const piece=pzGs.board[r][c];if(pzSel){const dst=pzLeg.find(d=>d[0]===r&&d[1]===c);if(dst){const [sfr,sfc,str,stc]=pz.move[pzStep];if(pzSel.r===sfr&&pzSel.c===sfc&&r===str&&c===stc){const gl=GL[pzGs.board[sfr][sfc]];const hasCap=pzGs.board[str][stc]!==null;const cc=pzGs.turn;animMv(sfr,sfc,str,stc,gl,()=>{if(hasCap)animCap(str,stc,cc,'pz-board');pzGs=applyMv(pzGs,sfr,sfc,str,stc);pzLastMv={fr:sfr,fc:sfc,tr:str,tc:stc};pzSel=null;pzLeg=[];pzStep++;if(pzStep>=pz.move.length){pzData.results[pzIdx]='s';pzData.done++;savePzData();document.getElementById('pz-status').textContent='✓ Correct!';document.getElementById('pz-status').className='status-bar ok';document.getElementById('pz-fb').textContent='🎯 Brilliant!';document.getElementById('pz-fb').className='pz-fb ok';buildPipGrid();const solved=pzData.results.filter(r=>r==='s').length;setTimeout(()=>{document.getElementById('pc-sub').textContent=pz.sol;document.getElementById('pc-stat').textContent=`${solved} puzzles solved today`;document.getElementById('pc-modal').style.display='flex';},700);}else{document.getElementById('pz-fb').textContent='✓ Keep going…';document.getElementById('pz-fb').className='pz-fb ok';}requestAnimationFrame(()=>animPlace(str,stc,'pz-board'));renderPzBoard();},'pz-board');}else{if(pzData.results[pzIdx]===null){pzData.results[pzIdx]='f';pzData.done++;savePzData();buildPipGrid();}const sq=getSq(r,c,'pz-board');if(sq){sq.classList.add('pz-bad');setTimeout(()=>sq.classList.remove('pz-bad'),480);}document.getElementById('pz-fb').textContent='✗ Incorrect — try another move';document.getElementById('pz-fb').className='pz-fb fail';document.getElementById('pz-status').textContent='Incorrect — use hint or show solution';document.getElementById('pz-status').className='status-bar fail';pzSel=null;pzLeg=[];renderPzBoard();}return;}if(piece&&piece[0]===pzGs.turn){pzSel={r,c};pzLeg=legalMoves(pzGs,r,c);}else{pzSel=null;pzLeg=[];}renderPzBoard();}
-function pzHint(){const pz=PUZZLES[pzIdx%PUZZLES.length];const h=document.getElementById('pz-hint');h.textContent='💡 '+pz.hint;h.style.display='block';}
-function pzReveal(){const pz=PUZZLES[pzIdx%PUZZLES.length];const h=document.getElementById('pz-hint');h.textContent='✨ Solution: '+pz.sol;h.style.display='block';if(pzData.results[pzIdx]===null){pzData.results[pzIdx]='f';pzData.done++;savePzData();buildPipGrid();}const [sfr,sfc]=pz.move[pzStep]||pz.move[0];const sq=getSq(sfr,sfc,'pz-board');if(sq)sq.classList.add('pz-ok');}
-function nextPuzzle(){document.getElementById('pc-modal').style.display='none';let next=pzIdx+1;while(next<PZ_LIMIT&&pzData.results[next]!==null)next++;if(next>=PZ_LIMIT){showDailyLimit();return;}loadPuzzle(next);}
-function skipPuzzle(){if(pzData.results[pzIdx]===null){pzData.results[pzIdx]='k';pzData.done++;savePzData();buildPipGrid();}nextPuzzle();}
-function showDailyLimit(){function tick(){const now=new Date(),mid=new Date(now);mid.setHours(24,0,0,0);const diff=mid-now;const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);document.getElementById('dl-timer').textContent=`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}tick();setInterval(tick,1000);document.getElementById('dl-modal').style.display='flex';}
 
+function initPuzzles(){
+  pzData=loadPzData();
+  let start=0;
+  for(let i=0;i<PZ_LIMIT;i++){
+    if(pzData.results[i]===null){start=i;break;}
+    if(i===PZ_LIMIT-1&&pzData.results[i]!==null)start=-1;
+  }
+  buildPipGrid();
+  if(start===-1){showDailyLimit();return;}
+  loadPuzzle(start);
+}
+
+function buildPipGrid(){
+  const g=document.getElementById('pz-pip-grid');g.innerHTML='';
+  for(let i=0;i<PZ_LIMIT;i++){
+    const pip=document.createElement('div');pip.className='pz-pip';
+    const r=pzData.results[i];
+    if(r==='s')pip.classList.add('solved');
+    else if(r==='f')pip.classList.add('failed');
+    else if(r==='k')pip.classList.add('skipped');
+    if(i===pzIdx&&r===null)pip.classList.add('cur');
+    pip.title=`Puzzle ${i+1}`;
+    pip.onclick=(idx=>()=>loadPuzzle(idx))(i);
+    g.appendChild(pip);
+  }
+  const done=pzData.results.filter(r=>r!==null).length;
+  document.getElementById('pz-done').textContent=done;
+  const pct=(done/PZ_LIMIT*100).toFixed(0);
+  document.getElementById('pz-fill').style.width=pct+'%';
+  document.getElementById('pz-blbl').textContent=`${done} of ${PZ_LIMIT} completed`;
+}
+
+function loadPuzzle(idx){
+  if(pzData.done>=PZ_LIMIT&&pzData.results[idx]===null){showDailyLimit();return;}
+  pzIdx=idx;pzStep=0;pzSel=null;pzLeg=[];pzLastMv=null;
+  const pz=PUZZLES[idx%PUZZLES.length];
+  pzGs={board:fenToBoard(pz.fen),turn:pz.turn,castling:{wK:false,wQ:false,bK:false,bQ:false},ep:pz.ep||null,hm:0,fm:1};
+  document.getElementById('pz-theme').textContent=pz.theme;
+  document.getElementById('pz-desc').textContent=pz.desc;
+  document.getElementById('pz-turn').textContent=(pz.turn==='w'?'♔ White':'♚ Black')+' to move';
+  const hint=document.getElementById('pz-hint');hint.textContent='';hint.style.display='none';
+  document.getElementById('pz-fb').textContent='';document.getElementById('pz-fb').className='pz-fb';
+  document.getElementById('pz-status').textContent='Find the best move!';document.getElementById('pz-status').className='status-bar';
+  renderPzBoard();buildPipGrid();
+}
+
+function renderPzBoard(){renderBoardEl('pz-board',pzGs,pzSel,pzLeg,pzLastMv,true);}
+
+function pzClick(r,c){
+  if(!pzGs)return;
+  const pz=PUZZLES[pzIdx%PUZZLES.length];
+  if(pzStep>=pz.move.length)return;
+  if(pzData.results[pzIdx]!==null)return;
+  const piece=pzGs.board[r][c];
+  if(pzSel){
+    const dst=pzLeg.find(d=>d[0]===r&&d[1]===c);
+    if(dst){
+      const [sfr,sfc,str,stc]=pz.move[pzStep];
+      if(pzSel.r===sfr&&pzSel.c===sfc&&r===str&&c===stc){
+        // Correct!
+        const gl=GL[pzGs.board[sfr][sfc]];
+        const hasCap=pzGs.board[str][stc]!==null;
+        const cc=pzGs.turn;
+        animMv(sfr,sfc,str,stc,gl,()=>{
+          if(hasCap)animCap(str,stc,cc,'pz-board');
+          pzGs=applyMv(pzGs,sfr,sfc,str,stc);
+          pzLastMv={fr:sfr,fc:sfc,tr:str,tc:stc};
+          pzSel=null;pzLeg=[];pzStep++;
+          if(pzStep>=pz.move.length){
+            pzData.results[pzIdx]='s';pzData.done++;savePzData();
+            document.getElementById('pz-status').textContent='✓ Correct!';
+            document.getElementById('pz-status').className='status-bar ok';
+            document.getElementById('pz-fb').textContent='🎯 Brilliant!';
+            document.getElementById('pz-fb').className='pz-fb ok';
+            buildPipGrid();
+            const solved=pzData.results.filter(r=>r==='s').length;
+            setTimeout(()=>{
+              document.getElementById('pc-sub').textContent=pz.sol;
+              document.getElementById('pc-stat').textContent=`${solved} puzzles solved today`;
+              document.getElementById('pc-modal').style.display='flex';
+            },700);
+          } else {
+            document.getElementById('pz-fb').textContent='✓ Keep going…';
+            document.getElementById('pz-fb').className='pz-fb ok';
+          }
+          requestAnimationFrame(()=>animPlace(str,stc,'pz-board'));
+          renderPzBoard();
+        },'pz-board');
+      } else {
+        // Wrong
+        if(pzData.results[pzIdx]===null){pzData.results[pzIdx]='f';pzData.done++;savePzData();buildPipGrid();}
+        const sq=getSq(r,c,'pz-board');
+        if(sq){sq.classList.add('pz-bad');setTimeout(()=>sq.classList.remove('pz-bad'),420);}
+        document.getElementById('pz-fb').textContent='✗ Not the right move';
+        document.getElementById('pz-fb').className='pz-fb fail';
+        document.getElementById('pz-status').textContent='Incorrect — try hint or show solution';
+        document.getElementById('pz-status').className='status-bar fail';
+        pzSel=null;pzLeg=[];renderPzBoard();
+      }
+      return;
+    }
+    if(piece&&piece[0]===pzGs.turn){pzSel={r,c};pzLeg=legalMoves(pzGs,r,c);renderPzBoard();return;}
+    pzSel=null;pzLeg=[];renderPzBoard();return;
+  }
+  if(piece&&piece[0]===pzGs.turn){pzSel={r,c};pzLeg=legalMoves(pzGs,r,c);}
+  else{pzSel=null;pzLeg=[];}
+  renderPzBoard();
+}
+
+function pzHint(){
+  const pz=PUZZLES[pzIdx%PUZZLES.length];
+  const h=document.getElementById('pz-hint');
+  h.textContent='💡 '+pz.hint;h.style.display='block';
+}
+function pzReveal(){
+  const pz=PUZZLES[pzIdx%PUZZLES.length];
+  const h=document.getElementById('pz-hint');
+  h.textContent='✨ Solution: '+pz.sol;h.style.display='block';
+  if(pzData.results[pzIdx]===null){pzData.results[pzIdx]='f';pzData.done++;savePzData();buildPipGrid();}
+  const [sfr,sfc]=pz.move[Math.min(pzStep,pz.move.length-1)];
+  const sq=getSq(sfr,sfc,'pz-board');if(sq)sq.classList.add('pz-ok');
+}
+function nextPuzzle(){
+  document.getElementById('pc-modal').style.display='none';
+  let next=pzIdx+1;
+  while(next<PZ_LIMIT&&pzData.results[next]!==null)next++;
+  if(next>=PZ_LIMIT){showDailyLimit();return;}
+  loadPuzzle(next);
+}
+function skipPuzzle(){
+  if(pzData.results[pzIdx]===null){pzData.results[pzIdx]='k';pzData.done++;savePzData();buildPipGrid();}
+  nextPuzzle();
+}
+function showDailyLimit(){
+  function tick(){
+    const now=new Date(),mid=new Date(now);mid.setHours(24,0,0,0);
+    const diff=mid-now;
+    const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+    document.getElementById('dl-timer').textContent=`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  tick();setInterval(tick,1000);
+  document.getElementById('dl-modal').style.display='flex';
+}
+
+// Init
 renderBoard();updateStatus();updateTimers();
 </script>
 </body>
